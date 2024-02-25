@@ -26,6 +26,8 @@ project "Compiler"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	targetname("ssc")
+
 	files
 	{
 		"%{prj.name}/src/**.h",

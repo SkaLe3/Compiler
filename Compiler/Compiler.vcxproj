@@ -44,14 +44,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug-windows-x86_64\Compiler\</OutDir>
     <IntDir>..\bin-int\Debug-windows-x86_64\Compiler\</IntDir>
-    <TargetName>Compiler</TargetName>
+    <TargetName>ssc</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\bin\Release-windows-x86_64\Compiler\</OutDir>
     <IntDir>..\bin-int\Release-windows-x86_64\Compiler\</IntDir>
-    <TargetName>Compiler</TargetName>
+    <TargetName>ssc</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -91,6 +91,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Compiler.h" />
+    <ClInclude Include="src\Driver.h" />
+    <ClInclude Include="src\Errors.h" />
+    <ClInclude Include="src\Lexer.h" />
+    <ClInclude Include="src\Token.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Compiler.cpp" />
+    <ClCompile Include="src\Driver.cpp" />
+    <ClCompile Include="src\Lexer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
