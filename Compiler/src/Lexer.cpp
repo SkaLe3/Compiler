@@ -120,6 +120,8 @@ void Lexer::SetupKeywordTable()
 	m_KeyWordsTable["THEN"]		= static_cast<uint32_t>(ETokenCode::KW_THEN);
 	m_KeyWordsTable["ELSE"]		= static_cast<uint32_t>(ETokenCode::KW_ELSE);
 	m_KeyWordsTable["ENDIF"]	= static_cast<uint32_t>(ETokenCode::KW_ENDIF);
+
+	m_KeyWordsTable[":="] = static_cast<uint32_t>(ETokenCode::DelimiterAssign);
 }
 
 void Lexer::WhiteSpaceState()
@@ -191,12 +193,37 @@ void Lexer::ConstantState()
 
 void Lexer::UnaryDelimiterState()
 {
+	size_t lexemeLine = m_Line;
+	size_t lexemeStartPosition = m_Position;
 
+	m_TokenBuffer += m_CurrentCharacter;
+
+	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
+	Next();
+	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenBuffer.clear();
 }
 
 void Lexer::MultiDelimiterState()
 {
+	size_t lexemeLine = m_Line;
+	size_t lexemeStartPosition = m_Position;
 
+	m_TokenBuffer += m_CurrentCharacter;
+	Next();
+	if (m_CurrentCharacter == '=')
+	{
+		m_TokenBuffer += m_CurrentCharacter;
+	}
+
+	uint32_t lexemeCode;
+ 
+	if (auto tableRecord = m_KeyWordsTable.find(m_TokenBuffer); tableRecord != m_KeyWordsTable.end())
+	{
+		lexemeCode = tableRecord->second;
+	}
+	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenBuffer.clear();
 }
 
 void Lexer::CommentState()

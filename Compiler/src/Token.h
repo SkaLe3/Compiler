@@ -7,7 +7,7 @@ enum class ETokenCode : uint32_t
 {
 	None = 0,
 	DelimiterBase = 301,
-	DelimiterColon,
+	DelimiterAssign,
 
 	KW_Base = 401,
 	KW_PROGRAM,
