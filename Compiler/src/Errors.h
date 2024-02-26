@@ -1,14 +1,17 @@
 #ifndef ERRORS_H_
 #define ERRORS_H_
+
 #include <string>
 
 class Error
 {
 public:
-	// C-tor
+	Error(const std::string& msg);
+	std::string GetMessage() { return m_Message; }
 
-private:
-	std::string message;
+protected:
+	// @TODO: add instigator, position, type
+	std::string m_Message;
 };
 
 

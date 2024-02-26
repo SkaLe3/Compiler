@@ -1,10 +1,11 @@
 PROGRAM myprogram123;
-VAR var1:INTEGER var2:FLOAT;
+VAR va1:INTEGER var2:FLOAT;
 BEGIN 
 	
-	var1 := 13;
+	va1 := 13;
 	var2 := 1;
-
+(
+(*)
 	IF var1 = 111 
 	THEN var1 := 15
 	ELSE var1 := 111
@@ -18,3 +19,4 @@ BEGIN
 	THEN var2 := 0;
 	ENDIF; 
 END.
+

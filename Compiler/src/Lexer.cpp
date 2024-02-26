@@ -1,7 +1,8 @@
 #include "Lexer.h"
+#include "ErrorHandler.h"
 #include <iostream>
 
-Lexer::Lexer() : m_Line(1), m_Position(0), m_CurrentCharacter(0)
+Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler) : m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler)
 {
 	SetupSymbolCategories();
 	SetupKeywordTable();
@@ -14,7 +15,9 @@ void Lexer::Scan(const std::string& filePath)
 
 	if (!m_InputFile.is_open())
 	{
-		// @TODO: Handle error
+		auto error = ErrorHandler::CreateGeneralError("File IO", std::string("No such file or directory: ") + filePath);
+		m_ErrorHandler->ReportError(error);
+		// @TODO: errorHandler -> compilation terminated notify
 		return;
 	}
 	Next();
@@ -42,19 +45,19 @@ void Lexer::Scan(const std::string& filePath)
 			CommentState();
 			break;
 		default:
-			// Report error
+			auto error = ErrorHandler::CreateSyntaxError("Lexer", std::string("Illegal character '") + m_CurrentCharacter + "' found", m_Line, m_Position);
+			m_ErrorHandler->ReportError(error);
+			Next();
 			break;
 		}
 
 	}
-	std::cout << "Tokens:\n";
-	int32_t tokenInd = 0;
-	for (Token& token : m_Tokens)
-	{
-		std::cout << "[" << tokenInd << "] <" << token.Lexeme << "> = " << token.Code << " | " << token.Line << " : " << token.Position << "\n";
-		tokenInd++;
-	}
 
+}
+
+std::shared_ptr<LexerData> Lexer::GetLexerData()
+{
+	return std::make_shared<LexerData>( m_Tokens, m_ConstantsTable, m_IdentifiersTable, m_KeyWordsTable);
 }
 
 void Lexer::Next()
@@ -152,7 +155,7 @@ void Lexer::IdentifierState()
 	}
 	else if (auto identifierRecord = m_IdentifiersTable.find(m_TokenBuffer); identifierRecord == m_IdentifiersTable.end())
 	{
-		lexemeCode = static_cast<uint32_t>(ETokenCode::IdentifierBase) + m_IdentifiersTable.size(); // @TODO: Create function
+		lexemeCode = static_cast<uint32_t>(ETokenCode::IdentifierBase) + m_IdentifiersTable.size();
 		m_IdentifiersTable[m_TokenBuffer] = lexemeCode;
 	}
 	else
@@ -178,7 +181,7 @@ void Lexer::ConstantState()
 
 	if (auto tableRecord = m_ConstantsTable.find(m_TokenBuffer); tableRecord == m_ConstantsTable.end())
 	{
-		lexemeCode = static_cast<uint32_t>(ETokenCode::ConstantBase) + m_ConstantsTable.size(); // @TODO: Create function
+		lexemeCode = static_cast<uint32_t>(ETokenCode::ConstantBase) + m_ConstantsTable.size(); 
 		m_ConstantsTable[m_TokenBuffer] = lexemeCode;
 	}
 	else
@@ -210,24 +213,74 @@ void Lexer::MultiDelimiterState()
 	size_t lexemeStartPosition = m_Position;
 
 	m_TokenBuffer += m_CurrentCharacter;
+	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
 	Next();
+	
 	if (m_CurrentCharacter == '=')
 	{
 		m_TokenBuffer += m_CurrentCharacter;
+		if (auto tableRecord = m_KeyWordsTable.find(m_TokenBuffer); tableRecord != m_KeyWordsTable.end())
+		{
+			lexemeCode = tableRecord->second;
+		}
 	}
 
-	uint32_t lexemeCode;
- 
-	if (auto tableRecord = m_KeyWordsTable.find(m_TokenBuffer); tableRecord != m_KeyWordsTable.end())
-	{
-		lexemeCode = tableRecord->second;
-	}
 	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
 void Lexer::CommentState()
 {
+	size_t comStartLine = m_Line;
+	size_t comStartPos = m_Position;
+	Next();
+	if (m_CurrentCharacter == '*')
+	{
+		InCommentState(comStartLine, comStartPos);
+	}
+	else
+	{
+		auto error = ErrorHandler::CreateSyntaxError("Lexer", "Missing '*' after '(' in comment", comStartLine, comStartPos);
+		m_ErrorHandler->ReportError(error);
+		Next();
+	}
+}
 
+void Lexer::InCommentState(size_t line, size_t pos)
+{
+
+	Next();
+	while (m_CurrentCharacter != '*' && m_CurrentCharacter != EOF)
+	{
+		Next();
+	}
+
+	if (m_CurrentCharacter == '*')
+	{
+		EndCommentState(line, pos);
+	}
+	else
+	{
+		auto error = ErrorHandler::CreateSyntaxError("Lexer", "Comment not closed", line, pos);
+		m_ErrorHandler->ReportError(error);
+	}
+
+}
+
+void Lexer::EndCommentState(size_t line, size_t pos)
+{
+	while (m_CurrentCharacter == '*')
+	{
+		Next();
+	}
+
+	if (m_CurrentCharacter == ')')
+	{
+		Next();
+		return;
+	}
+
+	InCommentState(line, pos);
+	
 }
 
