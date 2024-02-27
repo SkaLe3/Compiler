@@ -1,10 +1,9 @@
 #include "ErrorHandler.h"
-#include "Errors.h"
 
 #include <sstream>
 #include <memory>
 
-ErrorHandler::ErrorHandler()
+ErrorHandler::ErrorHandler() : bFatalError(false)
 {
 	m_Errors = std::make_shared<std::vector<Error>>();
 }
@@ -19,17 +18,27 @@ std::shared_ptr<std::vector<Error>> ErrorHandler::GetErrors()
 	return m_Errors;
 }
 
-Error ErrorHandler::CreateSyntaxError(const std::string& instigator, const std::string& errorMessage, uint32_t line, uint32_t pos)
+Error ErrorHandler::CreateSyntaxError(const std::string& errorMessage, uint32_t line, uint32_t pos, EErrorInstigator instigator)
 {
-	std::stringstream ss;
-	ss <<"[" << instigator << "]" << "(" << line << "," << pos << "): " << "syntax error: " + errorMessage;
-	return Error(ss.str());
-
+	return CreateError(errorMessage, line, pos, instigator, EErrorType::SyntaxError);
 }
 
-Error ErrorHandler::CreateGeneralError(const std::string& instigator, const std::string& errorMessage)
+Error ErrorHandler::CreateGeneralError(const std::string& errorMessage, EErrorInstigator instigator)
 {
-	std::stringstream ss;
-	ss << "[" << instigator << "] " << "driver error: " + errorMessage;
-	return Error(ss.str());
+	return CreateError(errorMessage, 0, 0, instigator, EErrorType::DriverError);
+}
+
+void ErrorHandler::GotFatalError()
+{
+	bFatalError = true;
+}
+
+bool ErrorHandler::HasFatalError()
+{
+	return bFatalError;
+}
+
+Error ErrorHandler::CreateError(const std::string& errorMessage, uint32_t line, uint32_t pos, EErrorInstigator instigator, EErrorType type)
+{
+	return { errorMessage, line, pos, instigator, type };
 }

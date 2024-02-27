@@ -1,5 +1,6 @@
 #include "Driver.h"
 #include "CompilerInterface.h"
+#include "Log.h"
 /*
 * 1. <signal-program> --> <program>
 * 2. <program> --> PROGRAM <procedure-identifier> ; <block>.
@@ -28,6 +29,7 @@
 
 int main(int argc, char* argv[])
 {
+	Log::Init();
 	Driver driver;
 	driver.SetUI(std::make_unique<CLInterface>());
 	driver.CreateOptionsFromCLArguments(argc, argv);

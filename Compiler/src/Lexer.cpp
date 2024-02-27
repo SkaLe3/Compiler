@@ -1,8 +1,9 @@
 #include "Lexer.h"
 #include "ErrorHandler.h"
-#include <iostream>
 
-Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler) : m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler)
+
+Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler) 
+	: m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler), m_Instigator(EErrorInstigator::Lexer)
 {
 	SetupSymbolCategories();
 	SetupKeywordTable();
@@ -15,9 +16,9 @@ void Lexer::Scan(const std::string& filePath)
 
 	if (!m_InputFile.is_open())
 	{
-		auto error = ErrorHandler::CreateGeneralError("File IO", std::string("No such file or directory: ") + filePath);
+		auto error = ErrorHandler::CreateGeneralError(std::string("No such file or directory: ") + filePath, EErrorInstigator::FileIO);
 		m_ErrorHandler->ReportError(error);
-		// @TODO: errorHandler -> compilation terminated notify
+		m_ErrorHandler->GotFatalError();
 		return;
 	}
 	Next();
@@ -45,13 +46,14 @@ void Lexer::Scan(const std::string& filePath)
 			CommentState();
 			break;
 		default:
-			auto error = ErrorHandler::CreateSyntaxError("Lexer", std::string("Illegal character '") + m_CurrentCharacter + "' found", m_Line, m_Position);
+			auto error = ErrorHandler::CreateSyntaxError(std::string("Illegal character '") + m_CurrentCharacter + "' found", m_Line, m_Position, m_Instigator);
 			m_ErrorHandler->ReportError(error);
 			Next();
 			break;
 		}
 
 	}
+	m_InputFile.close();
 
 }
 
@@ -240,7 +242,7 @@ void Lexer::CommentState()
 	}
 	else
 	{
-		auto error = ErrorHandler::CreateSyntaxError("Lexer", "Missing '*' after '(' in comment", comStartLine, comStartPos);
+		auto error = ErrorHandler::CreateSyntaxError("Missing '*' after '(' in comment", comStartLine, comStartPos, m_Instigator);
 		m_ErrorHandler->ReportError(error);
 		Next();
 	}
@@ -261,7 +263,7 @@ void Lexer::InCommentState(size_t line, size_t pos)
 	}
 	else
 	{
-		auto error = ErrorHandler::CreateSyntaxError("Lexer", "Comment not closed", line, pos);
+		auto error = ErrorHandler::CreateSyntaxError("Comment not closed", line, pos, m_Instigator);
 		m_ErrorHandler->ReportError(error);
 	}
 

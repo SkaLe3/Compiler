@@ -5,17 +5,19 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Compiler.cpp" />
     <ClCompile Include="src\Driver.cpp" />
-    <ClCompile Include="src\Errors.cpp" />
+    <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\ErrorHandler.cpp" />
     <ClCompile Include="src\CompilerInterface.cpp" />
+    <ClCompile Include="src\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Lexer.h" />
     <ClInclude Include="src\Compiler.h" />
     <ClInclude Include="src\Driver.h" />
-    <ClInclude Include="src\Errors.h" />
+    <ClInclude Include="src\Error.h" />
     <ClInclude Include="src\Token.h" />
     <ClInclude Include="src\ErrorHandler.h" />
     <ClInclude Include="src\CompilerInterface.h" />
+    <ClInclude Include="src\Log.h" />
   </ItemGroup>
 </Project>

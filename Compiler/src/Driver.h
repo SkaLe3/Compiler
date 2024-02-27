@@ -13,6 +13,7 @@ class ErrorHandler;
 struct Options
 {
 	std::string SourceFile;
+	std::string OutputFile;
 };
 
 class Driver final
@@ -23,6 +24,10 @@ public:
 	void CreateOptionsFromCLArguments(int argc, char* argv[]);
 	void Start();
 	void SetUI(std::unique_ptr<CompilerInterface>&& ui);
+
+private:
+	bool CheckSourceExtension(const std::string& filePath);
+	void Terminate();
 
 private:
 	Options m_Options;

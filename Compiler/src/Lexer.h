@@ -1,14 +1,15 @@
 #ifndef LEXER_H_
 #define LEXER_H_
 
+#include "Token.h"
+#include "Error.h"
+
 #include <cstdint>
 #include <fstream>
 #include <array>
 #include <vector>
-#include <iostream> //temp
 #include <unordered_map>
 
-#include "Token.h"
 
 enum class ESymbolCategories : uint8_t
 {
@@ -78,6 +79,8 @@ private:
 	std::unordered_map<std::string, uint32_t> m_KeyWordsTable;
 
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
+
+	EErrorInstigator m_Instigator;
 };
 
 #endif /* LEXER_H_ */

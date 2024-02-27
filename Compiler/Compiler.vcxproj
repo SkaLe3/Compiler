@@ -58,6 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>COMPILE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -74,6 +75,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>COMPILE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -91,12 +93,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\CompilerInterface.h" />
     <ClInclude Include="src\Compiler.h" />
+    <ClInclude Include="src\CompilerInterface.h" />
     <ClInclude Include="src\Driver.h" />
     <ClInclude Include="src\ErrorHandler.h" />
-    <ClInclude Include="src\Errors.h" />
+    <ClInclude Include="src\Error.h" />
     <ClInclude Include="src\Lexer.h" />
+    <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Token.h" />
   </ItemGroup>
   <ItemGroup>
@@ -104,8 +107,9 @@
     <ClCompile Include="src\CompilerInterface.cpp" />
     <ClCompile Include="src\Driver.cpp" />
     <ClCompile Include="src\ErrorHandler.cpp" />
-    <ClCompile Include="src\Errors.cpp" />
+    <ClCompile Include="src\Error.cpp" />
     <ClCompile Include="src\Lexer.cpp" />
+    <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
