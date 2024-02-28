@@ -71,7 +71,7 @@ vendor/
 *bit-int/
 *.vcxproj
 *.vcxproj.filters
-CMakeLists.txt
+!Make.bat
 
 
 
