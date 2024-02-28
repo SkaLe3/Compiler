@@ -65,6 +65,8 @@ build/
 vendor/
 *.bat
 *.lua
-
+*.sln
+*bin/
+*bit-int/
 
 
