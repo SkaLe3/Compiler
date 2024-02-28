@@ -1,11 +1,12 @@
 #ifndef ERROR_HANDLER_H_
 #define ERROR_HANDLER_H_
 
+#include "Error.h"
+
 #include <vector>
 #include <string>
 #include <memory>
 
-#include "Error.h"
 
 class ErrorHandler
 {

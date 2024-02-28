@@ -36,7 +36,8 @@ project "Compiler"
 
 	includedirs
 	{
-		"Compiler/src"
+		"Compiler/src",
+		"Compiler/src/Core"
 	}
 
 	filter "system:windows"
@@ -48,7 +49,7 @@ project "Compiler"
 		symbols "on"
 
 	filter "configurations:Release"
-	defines "COMPILE_RELEASE"
+		defines "COMPILE_RELEASE"
 		runtime "Release"
 		optimize "on"
 

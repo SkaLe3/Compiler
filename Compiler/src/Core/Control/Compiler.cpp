@@ -1,5 +1,5 @@
 #include "Compiler.h"
-#include "ErrorHandler.h"
+#include "Errors/ErrorHandler.h"
 
 
 Compiler::Compiler(std::shared_ptr<ErrorHandler> errorHandler) : m_ErrorHandler(errorHandler)

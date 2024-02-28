@@ -1,8 +1,8 @@
 #include "Driver.h"
-#include "ErrorHandler.h"
-#include "Error.h"
-#include "Lexer.h"
-#include "Log.h"
+#include "Errors/ErrorHandler.h"
+#include "Errors/Error.h"
+#include "Lexer/Lexer.h"
+#include "Utilities/Log.h"
 
 #include <stdlib.h>
 
@@ -65,7 +65,7 @@ void Driver::Terminate()
 
 void Driver::Start()
 {
-	LOG_STATE("Build started...");
+	LOG_STATE("Build started...", "\n");
 
 	m_UI->SetInfoFileName("comp_info.txt");
 	m_UI->SetOutToFileEnabled(true);

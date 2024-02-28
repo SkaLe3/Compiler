@@ -1,10 +1,12 @@
 #ifndef COMPILERINTERFACE_H_
 #define COMPILERINTERFACE_H_
 
-#include "ErrorHandler.h"
-#include "Lexer.h"
+#include "Errors/ErrorHandler.h"
+#include "Lexer/Lexer.h"
+#include "Log.h"
 
 #include <memory>
+
 
 class CompilerInterface
 {

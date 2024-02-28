@@ -2,6 +2,7 @@
 #define TOKEN_H_
 
 #include <string>
+#include <cstdint>
 
 enum class ETokenCode : uint32_t
 {

@@ -3,6 +3,17 @@
 
 #include <iostream>
 
+#define CRIMSON   "\033[31m"
+#define LIME	  "\033[32m"
+#define LEMON	  "\033[33m"
+#define AZURE	  "\033[34m"
+#define MAGENTA   "\033[35m"
+#define TEAL	  "\033[36m"
+
+#define RESET     "\033[0m"
+#define UNDERLINE "\033[4m"
+#define INVERSE   "\033[7m"
+
 class Log
 {
 public:
@@ -14,10 +25,10 @@ public:
 	template <typename... Types>
 	void State(Types... objects)
 	{
-		SetColor(1, 3);
+		SetColor(LEMON);
 		PrintTime();
 		Print(objects...);
-		SetColor(0, 0);
+		SetColor(RESET);
 	}
 
 	template <typename... Types>
@@ -30,10 +41,10 @@ public:
 	template <typename... Types>
 	void Error(Types... objects)
 	{
-		SetColor(1, 1);
+		SetColor(CRIMSON);
 		PrintTime();
 		Print(objects...);
-		SetColor(0, 0);
+		SetColor(RESET);
 	}
 private:
 	template <typename T>
@@ -47,7 +58,7 @@ private:
 		std::cout << obj << m_Separator;
 		Print(objects...);
 	}
-	void SetColor(int brightness, int color);
+	void SetColor(const char* color);
 	void PrintTime();
 
 private:

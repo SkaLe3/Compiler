@@ -2,13 +2,14 @@
 #define LEXER_H_
 
 #include "Token.h"
-#include "Error.h"
+#include "Errors/Error.h"
 
 #include <cstdint>
 #include <fstream>
 #include <array>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 
 enum class ESymbolCategories : uint8_t

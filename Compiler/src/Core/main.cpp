@@ -1,6 +1,6 @@
-#include "Driver.h"
-#include "CompilerInterface.h"
-#include "Log.h"
+#include "Control/Driver.h"
+#include "Utilities/CompilerInterface.h"
+#include "Utilities/Log.h"
 /*
 * 1. <signal-program> --> <program>
 * 2. <program> --> PROGRAM <procedure-identifier> ; <block>.

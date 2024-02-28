@@ -1,5 +1,5 @@
 #include "Lexer.h"
-#include "ErrorHandler.h"
+#include "Errors/ErrorHandler.h"
 
 
 Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler) 

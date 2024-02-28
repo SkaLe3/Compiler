@@ -1,5 +1,5 @@
 #include "CompilerInterface.h"
-#include "Token.h"
+#include "Lexer/Token.h"
 #include "Log.h"
 
 #include <iostream>
@@ -13,9 +13,9 @@ std::string GetInstigatorColor(EErrorInstigator inst)
 	switch (inst)
 	{
 	case EErrorInstigator::Lexer:
-		return "\033[0;36m";
+		return TEAL;
 	default:
-		return "\033[0m";
+		return RESET;
 	}
 }
 
@@ -57,20 +57,20 @@ void CLInterface::OutErrors()
 	if (m_ErrorHandler->GetErrors()->empty())
 		return;
 
-	std::cout << "\n\033[0;31m============ \033[1;31mError List: \033[0;31m============\033[0m\n\n";
+	std::cout << CRIMSON <<"============ Error List: ============\n\n" << RESET;
  	
 	for (Error& error : *m_ErrorHandler->GetErrors())
 	{	
 		std::cout << "[";
 		std::cout << GetInstigatorColor(error.GetEnumInstigator());
-		std::cout << error.GetInstigator() << "\033[0m" << "] ";
+		std::cout << error.GetInstigator() << RESET << "] ";
 
 		if (error.GetLine() != "0")
-			std::cout << "(\033[1;36m" << error.GetLine() << "\033[0m,\033[1;36m" << error.GetPosition() << "\033[0m): ";
+			std::cout << TEAL << error.GetLine() << RESET << "," << TEAL << error.GetPosition() << RESET << "): ";
 
-		std::cout << "\033[0;31m" << error.GetType() << "\033[0m: " << error.GetMessage() << "\n";
+		std::cout << CRIMSON << error.GetType() << RESET << ": " << error.GetMessage() << "\n";
 	}
-	std::cout << "\033[0;31m=====================================\033[0m\n\n";
+	std::cout << CRIMSON << "=====================================\n\n" << RESET;
 
 	if (!bOutToFile)
 		return;
@@ -97,25 +97,27 @@ void CLInterface::OutTokens()
 	const uint32_t codeWidth = 8;
 	const uint32_t lexemeWidth = 22;
 
-	std::cout << "\033[0;32m============ \033[1;32mToken List: \033[0;32m============\033[0m\n";
+	std::cout << LIME << "============ mToken List: ============\n" << RESET;
 	std::cout <<  " Line" <<  "   Pos" << "   Code" << "           Lexeme\n" << std::endl;
 
 	for (const Token& token : m_LexerData->Tokens)
 	{
+
 		int32_t padding = (lineWidth - std::to_string(token.Line).size()) / 2;
-		std::cout << "[\033[1;36m" << std::right << std::setw(lineWidth - padding) << token.Line << "\033[0m" << std::setw(padding+1) << "]";
+		std::cout << "|" << TEAL << std::right << std::setw(lineWidth - padding) << token.Line << RESET << std::setw(padding + 1) << "]";
 
 		padding = (posWidth - std::to_string(token.Position).size()) / 2;
-		std::cout<< "[\033[1;36m" << std::setw(posWidth - padding) << token.Position << "\033[0m" << std::setw(padding+1) << "]";
+		std::cout<< "[" << TEAL << std::setw(posWidth - padding) << token.Position << RESET << std::setw(padding+1) << "]";
 
 		padding = (codeWidth - std::to_string(token.Code).size()) / 2;
-		std::cout << "\033[1;31m" << std::setw(codeWidth - padding) << token.Code << "\033[0m" << std::setw(padding + 1) << "=";
+		std::cout << CRIMSON << std::setw(codeWidth - padding) << token.Code << RESET << std::setw(padding + 1) << "=";
 
-		padding = (lexemeWidth - token.Lexeme.size()) / 2;
-		std::cout << std::setw(lexemeWidth - padding + 12) << std::right << "<\033[0;33m" + token.Lexeme + "\033[0m>" << std::setw(padding+1) << " " << std::endl;
+		size_t lex = token.Lexeme.size();
+		padding = (lexemeWidth - lex) / 2;
+		std::cout << std::setw(lexemeWidth - lex - padding) << std::right << "<" << LEMON <<  token.Lexeme << RESET << ">" << std::setw(padding+1) << " " << std::endl;
 	}
 
-	std::cout << "\033[0;32m=====================================\033[0m\n\n";
+	std::cout << LIME << "=====================================\n\n" << RESET;
 
 
 
@@ -125,16 +127,16 @@ void CLInterface::OutTokens()
 	for (const Token& token : m_LexerData->Tokens)
 	{
 		int32_t padding = (lineWidth - std::to_string(token.Line).size()) / 2;
-		m_Ofs << std::right << std::setw(lineWidth - padding) << token.Line << std::setw(padding + 1) << "]";
+		m_Ofs << "|" << std::right << std::setw(lineWidth - padding) << token.Line << std::setw(padding + 1) << "]";
 
 		padding = (posWidth - std::to_string(token.Position).size()) / 2;
-		m_Ofs << std::setw(posWidth - padding) << token.Position << std::setw(padding + 1) << "]";
+		m_Ofs << "[" << std::setw(posWidth - padding) << token.Position << std::setw(padding + 1) << "]";
 
 		padding = (codeWidth - std::to_string(token.Code).size()) / 2;
 		m_Ofs << std::setw(codeWidth - padding) << token.Code << std::setw(padding + 1) << "=";
 
 		padding = (lexemeWidth - token.Lexeme.size()) / 2;
-		m_Ofs << std::setw(lexemeWidth - padding + 12) << std::right << "<" + token.Lexeme + ">" << std::setw(padding + 1) << " " << std::endl;
+		m_Ofs << std::setw(lexemeWidth - padding) << std::right << "<" + token.Lexeme + ">" << std::setw(padding + 1) << " " << std::endl;
 	}
 
 	m_Ofs << "=====================================\n\n";
@@ -171,17 +173,18 @@ void CLInterface::DisplayTable(const std::unordered_map<std::string, uint32_t>& 
 {
 	const uint32_t lexemeWidth = 25;
 
-	std::cout << "========== \033[0;36m" << tableHeader << ":\033[0m =========\n\n";
+	std::cout << "==========" << TEAL << tableHeader << ":" << RESET << "========= \n\n";
 
 	std::cout << "| Code" << "|          Lexeme         |" << std::endl;
 	std::cout << "+-----+-------------------------+" << std::endl;
 
 	for (auto& record : table)
 	{
-		std::cout << std::left << "|\033[1;31m" << std::setw(5) << record.second << "\033[0m|";
+		std::cout << std::left << "|" << CRIMSON << std::setw(5) << record.second << RESET << "|";
 
-		int32_t padding = (float)(lexemeWidth - record.first.size()) / 2.0;
-		std::cout << std::setw(lexemeWidth - padding + 12) << std::right << "<\033[0;33m" + record.first + "\033[0m>" << std::setw(padding) << "|" << std::endl;
+		size_t lex = record.first.size();
+		int32_t padding = (float)(lexemeWidth - lex) / 2.0;
+		std::cout << std::setw(lexemeWidth - lex - padding) << std::right << "<" << LEMON << record.first << RESET << ">" << std::setw(padding) << " |" << std::endl;
 	}
 
 	std::cout << "=====================================\n\n";
@@ -197,7 +200,7 @@ void CLInterface::DisplayTable(const std::unordered_map<std::string, uint32_t>& 
 		m_Ofs << std::left << "|" << std::setw(5) << record.second << "|";
 
 		int32_t padding = (float)(lexemeWidth - record.first.size()) / 2.0;
-		m_Ofs << std::setw(lexemeWidth - padding + 12) << std::right << "<" + record.first + ">" << std::setw(padding) << "|" << std::endl;
+		m_Ofs << std::setw(lexemeWidth - padding) << std::right << "<" + record.first + ">" << std::setw(padding) << "|" << std::endl;
 	}
 
 	m_Ofs << "=====================================\n\n";

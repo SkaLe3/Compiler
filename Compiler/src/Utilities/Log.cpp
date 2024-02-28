@@ -1,5 +1,5 @@
 #include "Log.h"
-#include <Windows.h>
+
 #include <ctime>
 #include <string>
 
@@ -12,15 +12,9 @@ void Log::Init()
 	LOG_STATE("Initialized Log!");
 }
 
-void Log::SetColor(int brightness,  int color)
+void Log::SetColor(const char* color)
 {	
-	if (color == 0)
-	{
-		std::cout << "\033[0m";
-		return;
-	}
-	std::string st = std::string("\033[") + std::to_string(brightness) + ";3" + std::to_string(color) + "m";
-	std::cout << st;
+	std::cout << color;
 }
 
 void Log::PrintTime()

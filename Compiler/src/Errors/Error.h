@@ -2,7 +2,7 @@
 #define ERROR_H_
 
 #include <string>
-
+#include <cstdint>
 
 enum class EErrorInstigator : uint8_t
 {

@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>COMPILE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>COMPILE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -93,24 +93,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Compiler.h" />
-    <ClInclude Include="src\CompilerInterface.h" />
-    <ClInclude Include="src\Driver.h" />
-    <ClInclude Include="src\ErrorHandler.h" />
-    <ClInclude Include="src\Error.h" />
-    <ClInclude Include="src\Lexer.h" />
-    <ClInclude Include="src\Log.h" />
-    <ClInclude Include="src\Token.h" />
+    <ClInclude Include="src\Core\Control\Compiler.h" />
+    <ClInclude Include="src\Core\Control\Driver.h" />
+    <ClInclude Include="src\Core\Lexer\Lexer.h" />
+    <ClInclude Include="src\Core\Lexer\Token.h" />
+    <ClInclude Include="src\Errors\Error.h" />
+    <ClInclude Include="src\Errors\ErrorHandler.h" />
+    <ClInclude Include="src\Utilities\CompilerInterface.h" />
+    <ClInclude Include="src\Utilities\Log.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Compiler.cpp" />
-    <ClCompile Include="src\CompilerInterface.cpp" />
-    <ClCompile Include="src\Driver.cpp" />
-    <ClCompile Include="src\ErrorHandler.cpp" />
-    <ClCompile Include="src\Error.cpp" />
-    <ClCompile Include="src\Lexer.cpp" />
-    <ClCompile Include="src\Log.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Core\Control\Compiler.cpp" />
+    <ClCompile Include="src\Core\Control\Driver.cpp" />
+    <ClCompile Include="src\Core\Lexer\Lexer.cpp" />
+    <ClCompile Include="src\Core\main.cpp" />
+    <ClCompile Include="src\Errors\Error.cpp" />
+    <ClCompile Include="src\Errors\ErrorHandler.cpp" />
+    <ClCompile Include="src\Utilities\CompilerInterface.cpp" />
+    <ClCompile Include="src\Utilities\Log.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

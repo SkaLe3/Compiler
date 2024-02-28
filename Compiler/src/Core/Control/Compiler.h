@@ -1,7 +1,8 @@
 #ifndef COMPILER_H_
 #define COMPILER_H_
 
-#include "Lexer.h"
+#include "Lexer/Lexer.h"
+
 #include <string>
 
 class ErrorHandler;

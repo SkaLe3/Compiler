@@ -1,7 +1,5 @@
 #include "Error.h"
 
-
-
 Error::Error(const std::string& msg, size_t line, size_t pos, EErrorInstigator inst, EErrorType type) 
 	: m_Message(msg), m_Line(line), m_Position(pos), m_Instigator(inst), m_ErrorType(type)
 {
