@@ -44,9 +44,11 @@ project "Compiler"
 		systemversion "latest"
 
 	filter "configurations:Debug"
+		defines "COMPILE_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
 	filter "configurations:Release"
+		defines "COMPILE_RELEASE"
 		runtime "Release"
 		optimize "on"
