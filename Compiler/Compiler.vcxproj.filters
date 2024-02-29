@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Control">
+      <UniqueIdentifier>{DEB2DC4D-CA15-6CF2-739B-A4A85FDD3775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Lexer">
+      <UniqueIdentifier>{BDC8ACCD-A980-EE1A-1288-C776FE5E890B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Errors">
+      <UniqueIdentifier>{224C22B1-0EEE-4C87-F7A8-60DBE3E9D3D7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{010A8043-6D74-34BA-B6B2-E55F225C120F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Core\Control\Compiler.h">
+      <Filter>Core\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Control\Driver.h">
+      <Filter>Core\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Lexer\Lexer.h">
+      <Filter>Core\Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Lexer\Token.h">
+      <Filter>Core\Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Errors\Error.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Errors\ErrorHandler.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\CompilerInterface.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utilities\Log.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\Control\Compiler.cpp">
+      <Filter>Core\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Control\Driver.cpp">
+      <Filter>Core\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Lexer\Lexer.cpp">
+      <Filter>Core\Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Errors\Error.cpp">
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Errors\ErrorHandler.cpp">
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\CompilerInterface.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utilities\Log.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
