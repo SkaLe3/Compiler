@@ -97,7 +97,7 @@ void CLInterface::OutTokens()
 	const uint32_t codeWidth = 8;
 	const uint32_t lexemeWidth = 22;
 
-	std::cout << LIME << "============ Token List: ============\n" << RESET;
+	std::cout << LIME << "============ mToken List: ============\n" << RESET;
 	std::cout <<  " Line" <<  "   Pos" << "   Code" << "           Lexeme\n" << std::endl;
 
 	for (const Token& token : m_LexerData->Tokens)
@@ -173,7 +173,7 @@ void CLInterface::DisplayTable(const std::unordered_map<std::string, uint32_t>& 
 {
 	const uint32_t lexemeWidth = 25;
 
-	std::cout << "========== " << TEAL << tableHeader << ": " << RESET << "========= \n\n";
+	std::cout << "==========" << TEAL << tableHeader << ":" << RESET << "========= \n\n";
 
 	std::cout << "| Code" << "|          Lexeme         |" << std::endl;
 	std::cout << "+-----+-------------------------+" << std::endl;

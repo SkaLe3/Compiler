@@ -63,11 +63,15 @@ build/
 *.scc
 
 # Custom
+vendor/
 *.bat
+*.lua
+*.sln
 *bin/
 *bit-int/
+*.vcxproj
+*.vcxproj.filters
 CMakeLists.txt
-!GenerateVSProjects.bat
 
 
 
