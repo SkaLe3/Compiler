@@ -64,11 +64,8 @@ build/
 
 # Custom
 *.bat
-*.sln
 *bin/
 *bit-int/
-*.vcxproj
-*.vcxproj.filters
 CMakeLists.txt
 !GenerateVSProjects.bat
 
