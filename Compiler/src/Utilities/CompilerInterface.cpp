@@ -66,7 +66,7 @@ void CLInterface::OutErrors()
 		std::cout << error.GetInstigator() << RESET << "] ";
 
 		if (error.GetLine() != "0")
-			std::cout << TEAL << error.GetLine() << RESET << "," << TEAL << error.GetPosition() << RESET << "): ";
+			std::cout << "(" << TEAL << error.GetLine() << RESET << "," << TEAL << error.GetPosition() << RESET << "): ";
 
 		std::cout << CRIMSON << error.GetType() << RESET << ": " << error.GetMessage() << "\n";
 	}

@@ -179,6 +179,25 @@ void Lexer::ConstantState()
 		m_TokenBuffer += m_CurrentCharacter;
 		Next();
 	}
+	if (m_CurrentSymbol != ESymbolCategories::WhiteSpace
+		&& m_CurrentSymbol != ESymbolCategories::MultiDelimiter
+		&& m_CurrentSymbol != ESymbolCategories::UnaryDelimiter
+		&& m_CurrentSymbol != ESymbolCategories::Comment)
+	{
+		std::string suffixBuffer;
+		while (m_CurrentSymbol != ESymbolCategories::WhiteSpace
+			&& m_CurrentSymbol != ESymbolCategories::MultiDelimiter
+			&& m_CurrentSymbol != ESymbolCategories::UnaryDelimiter
+			&& m_CurrentSymbol != ESymbolCategories::Comment)
+		{
+			suffixBuffer += m_CurrentCharacter;
+			Next();
+		}
+		m_TokenBuffer += suffixBuffer;
+		auto error = ErrorHandler::CreateSyntaxError("Invalid suffix \"" + suffixBuffer + "\" on integer constant \"" + m_TokenBuffer + "\"", lexemeLine, lexemeStartPosition, m_Instigator);
+		m_ErrorHandler->ReportError(error);
+	}
+
 	uint32_t lexemeCode;
 
 	if (auto tableRecord = m_ConstantsTable.find(m_TokenBuffer); tableRecord == m_ConstantsTable.end())
@@ -190,7 +209,6 @@ void Lexer::ConstantState()
 	{
 		lexemeCode = tableRecord->second;
 	}
-
 
 	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
@@ -250,7 +268,6 @@ void Lexer::CommentState()
 
 void Lexer::InCommentState(size_t line, size_t pos)
 {
-
 	Next();
 	while (m_CurrentCharacter != '*' && m_CurrentCharacter != EOF)
 	{
@@ -266,7 +283,6 @@ void Lexer::InCommentState(size_t line, size_t pos)
 		auto error = ErrorHandler::CreateSyntaxError("Comment not closed", line, pos, m_Instigator);
 		m_ErrorHandler->ReportError(error);
 	}
-
 }
 
 void Lexer::EndCommentState(size_t line, size_t pos)
@@ -283,6 +299,5 @@ void Lexer::EndCommentState(size_t line, size_t pos)
 	}
 
 	InCommentState(line, pos);
-	
 }
 
