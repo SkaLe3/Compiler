@@ -26,7 +26,7 @@ enum class ETokenCode : uint32_t
 	IdentifierBase = 1001
 };
 
-
+// TODO : Add methods to check token type like: IsKeyword, etc.
 struct Token
 {
 	size_t Line;

@@ -34,10 +34,10 @@ protected:
 	std::ofstream m_Ofs;
 };
 
-class CLInterface : public CompilerInterface
+class CLI : public CompilerInterface
 {
 public:
-	~CLInterface();
+	~CLI();
 	virtual void OutErrors() override;
 	virtual void OutTokens() override;
 	virtual void OutIdentifiersTable() override;

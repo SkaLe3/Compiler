@@ -4,7 +4,7 @@
 #include "Lexer/Lexer.h"
 #include "Utilities/Log.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 Driver::Driver()
 {
@@ -17,7 +17,7 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 	if (argc < 2)
 	{
 		m_UI->UsageHint(argv[0]);
-		Terminate();
+		Terminate();								
 		return;
 	}
 

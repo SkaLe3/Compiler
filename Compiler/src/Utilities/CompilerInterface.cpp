@@ -47,12 +47,12 @@ void CompilerInterface::SetOutToFileEnabled(bool option)
 }
 
 
-CLInterface::~CLInterface()
+CLI::~CLI()
 {
 	m_Ofs.close();
 }
 
-void CLInterface::OutErrors()
+void CLI::OutErrors()
 {
 	if (m_ErrorHandler->GetErrors()->empty())
 		return;
@@ -90,7 +90,7 @@ void CLInterface::OutErrors()
 	m_Ofs << "=====================================\n\n";
 }
 
-void CLInterface::OutTokens()
+void CLI::OutTokens()
 {
 	const uint32_t lineWidth = 4;
 	const uint32_t posWidth = 4;
@@ -143,33 +143,33 @@ void CLInterface::OutTokens()
 	
 }
 
-void CLInterface::OutIdentifiersTable()
+void CLI::OutIdentifiersTable()
 {
 	DisplayTable(m_LexerData->IdentifiersTable, "Identifiers Table");
 }
 
-void CLInterface::OutConstantsTable()
+void CLI::OutConstantsTable()
 {
 	DisplayTable(m_LexerData->ConstantsTable, "Constants Table");
 }
 
-void CLInterface::OutKeywordsTable()
+void CLI::OutKeywordsTable()
 {
 	DisplayTable(m_LexerData->KeyWordsTable, "Keywords Table");
 }
 
-void CLInterface::OutOptions()
+void CLI::OutOptions()
 {
 	std::cout << "Source file: \n";
 	std::cout << "Out file: \n";
 }
 
-void CLInterface::UsageHint(char* name)
+void CLI::UsageHint(char* name)
 {
 	std::cout << "Usage: " << name << " <source_file> [options...] <out_file>\n";
 }
 
-void CLInterface::DisplayTable(const std::unordered_map<std::string, uint32_t>& table, const std::string& tableHeader)
+void CLI::DisplayTable(const std::unordered_map<std::string, uint32_t>& table, const std::string& tableHeader)
 {
 	const uint32_t lexemeWidth = 25;
 

@@ -72,7 +72,7 @@ private:
 	
 	// Token-related
 	std::string m_TokenBuffer;
-	std::vector<Token> m_Tokens;
+	std::vector<Token> m_TokenList;
 
 	// Tables
 	std::unordered_map<std::string, uint32_t> m_ConstantsTable;
@@ -82,6 +82,9 @@ private:
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
 
 	EErrorInstigator m_Instigator;
+
+	// TODO : Move vector of tokens to 	compiler
+	// TODO : Move tables to one SymTab in different file
 };
 
 #endif /* LEXER_H_ */

@@ -13,7 +13,7 @@ Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler)
 void Lexer::Scan(const std::string& filePath)
 {
 	m_InputFile.open(filePath);
-
+	// TODO : Move file opening to driver and pass file handler
 	if (!m_InputFile.is_open())
 	{
 		auto error = ErrorHandler::CreateGeneralError(std::string("No such file or directory: ") + filePath, EErrorInstigator::FileIO);
@@ -54,12 +54,11 @@ void Lexer::Scan(const std::string& filePath)
 
 	}
 	m_InputFile.close();
-
 }
 
 std::shared_ptr<LexerData> Lexer::GetLexerData()
 {
-	return std::make_shared<LexerData>( m_Tokens, m_ConstantsTable, m_IdentifiersTable, m_KeyWordsTable);
+	return std::make_shared<LexerData>( m_TokenList, m_ConstantsTable, m_IdentifiersTable, m_KeyWordsTable);
 }
 
 void Lexer::Next()
@@ -165,7 +164,7 @@ void Lexer::IdentifierState()
 		lexemeCode = identifierRecord->second;
 	}
 	
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenList.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -210,7 +209,7 @@ void Lexer::ConstantState()
 		lexemeCode = tableRecord->second;
 	}
 
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenList.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -223,7 +222,7 @@ void Lexer::UnaryDelimiterState()
 
 	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
 	Next();
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenList.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -245,7 +244,7 @@ void Lexer::MultiDelimiterState()
 		}
 	}
 
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenList.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
