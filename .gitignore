@@ -62,7 +62,10 @@ build/
 *.svclog
 *.scc
 
+
 # Custom
+*.vcxproj
+*.vcxproj.filters
 *.bat
 *bin/
 *bit-int/
