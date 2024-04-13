@@ -4,12 +4,15 @@
 
 Compiler::Compiler(std::shared_ptr<ErrorHandler> errorHandler) : m_ErrorHandler(errorHandler)
 {
-	m_Lexer = std::make_unique<Lexer>(errorHandler);
+	m_TokenSequence = std::make_shared<std::vector<Token>>();
+	m_Lexer = std::make_unique<Lexer>(m_TokenSequence, errorHandler);
+	m_Parser = std::make_unique<Parser>(m_TokenSequence, errorHandler);
 }
 
 void Compiler::Compile(const std::string& filePath)
 {
 	m_Lexer->Scan(filePath);
+	m_Parser->Parse();
 }
 
 std::shared_ptr<LexerData> Compiler::GetLexerData()

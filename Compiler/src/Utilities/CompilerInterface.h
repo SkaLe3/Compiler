@@ -12,10 +12,14 @@ class CompilerInterface
 {
 public:
 	virtual void OutErrors() = 0;
+
+	virtual void OutLexerResult() = 0;
 	virtual void OutTokens() = 0;
 	virtual void OutIdentifiersTable() = 0;
 	virtual void OutConstantsTable() = 0;
 	virtual void OutKeywordsTable() = 0;
+
+	virtual void OutAST() = 0;
 
 	virtual void OutOptions() = 0;
 
@@ -39,10 +43,14 @@ class CLI : public CompilerInterface
 public:
 	~CLI();
 	virtual void OutErrors() override;
+
+	virtual void OutLexerResult() override;
 	virtual void OutTokens() override;
 	virtual void OutIdentifiersTable() override;
 	virtual void OutConstantsTable() override;
 	virtual void OutKeywordsTable() override;
+
+	virtual void OutAST() override;
 
 	virtual void OutOptions() override;
 

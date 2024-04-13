@@ -2,10 +2,14 @@
 #define COMPILER_H_
 
 #include "Lexer/Lexer.h"
+#include "Parser/Parser.h"
 
 #include <string>
+#include <vector>
+#include <memory>
 
 class ErrorHandler;
+struct Token;
 
 class Compiler 
 {
@@ -19,8 +23,11 @@ private:
 
 
 private:
-	std::unique_ptr<Lexer> m_Lexer; // May be store in shared_ptr and create in driver
+	std::unique_ptr<Lexer> m_Lexer;
+	std::unique_ptr<Parser> m_Parser;
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
+
+	std::shared_ptr<std::vector<Token>>	 m_TokenSequence;
 
 };
 

@@ -81,10 +81,9 @@ void Driver::Start()
 		return;
 	}
 
-	m_UI->OutTokens();
-	m_UI->OutIdentifiersTable();
-	m_UI->OutConstantsTable();
-	m_UI->OutKeywordsTable();
+	m_UI->OutLexerResult();
+
+
 }
 
 void Driver::SetUI(std::unique_ptr<CompilerInterface>&& ui)

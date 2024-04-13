@@ -1,12 +1,22 @@
 #ifndef TOKEN_H_
 #define TOKEN_H_
 
+
+
 #include <string>
 #include <cstdint>
 
 enum class ETokenCode : uint32_t
 {
 	None = 0,
+	Eof,
+
+	D_Dot = 46,
+	D_Colon = 58,
+	D_Semicolon = 59,
+	D_Equal = 61,
+
+
 	DelimiterBase = 301,
 	DelimiterAssign,
 
@@ -22,17 +32,28 @@ enum class ETokenCode : uint32_t
 	KW_ELSE,
 	KW_ENDIF,
 	
-	ConstantBase = 501,
+	ConstantBase = 501,	 
 	IdentifierBase = 1001
 };
+template <typename T>
+constexpr auto operator+(T e) noexcept
+-> std::enable_if_t<std::is_enum<T>::value, std::underlying_type_t<T>>
+{
+	return static_cast<std::underlying_type_t<T>>(e);
+}
 
-// TODO : Add methods to check token type like: IsKeyword, etc.
+
 struct Token
 {
 	size_t Line;
 	size_t Position;
 	uint32_t Code;
 	std::string Lexeme;
+
+// 	static Token New(const ETokenCode& token)
+// 	{
+// 		return Token(0, 0, token, "");
+// 	}
 };
 
 #endif /* TOKEN_H_ */

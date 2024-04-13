@@ -1,4 +1,5 @@
 #include "ErrorHandler.h"
+#include "Data/Token.h"
 
 #include <sstream>
 #include <memory>
@@ -23,6 +24,18 @@ Error ErrorHandler::CreateSyntaxError(const std::string& errorMessage, uint32_t 
 	return CreateError(errorMessage, line, pos, instigator, EErrorType::SyntaxError);
 }
 
+Error ErrorHandler::CreateSyntaxError(const std::string& errorMessage, const Token& token, EErrorInstigator instigator)
+{
+	if ((ETokenCode)token.Code == ETokenCode::Eof)
+	{
+		return CreateError(" at end " + errorMessage, token, instigator, EErrorType::SyntaxError);
+	}
+	else
+	{
+		return CreateError(" at '" + token.Lexeme + "' " + errorMessage, token, instigator, EErrorType::SyntaxError );
+	}
+}
+
 Error ErrorHandler::CreateGeneralError(const std::string& errorMessage, EErrorInstigator instigator)
 {
 	return CreateError(errorMessage, 0, 0, instigator, EErrorType::DriverError);
@@ -41,4 +54,9 @@ bool ErrorHandler::HasFatalError()
 Error ErrorHandler::CreateError(const std::string& errorMessage, uint32_t line, uint32_t pos, EErrorInstigator instigator, EErrorType type)
 {
 	return { errorMessage, line, pos, instigator, type };
+}
+
+Error ErrorHandler::CreateError(const std::string& errorMessage, const Token& token, EErrorInstigator instigator, EErrorType type)
+{
+	return { errorMessage, token.Line, token.Position, instigator, type };
 }

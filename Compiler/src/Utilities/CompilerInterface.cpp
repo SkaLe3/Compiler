@@ -1,5 +1,5 @@
 #include "CompilerInterface.h"
-#include "Lexer/Token.h"
+#include "Data/Token.h"
 #include "Log.h"
 
 #include <iostream>
@@ -90,6 +90,14 @@ void CLI::OutErrors()
 	m_Ofs << "=====================================\n\n";
 }
 
+void CLI::OutLexerResult()
+{
+	OutTokens();
+	OutIdentifiersTable();
+	OutConstantsTable();
+	OutKeywordsTable();
+}
+
 void CLI::OutTokens()
 {
 	const uint32_t lineWidth = 4;
@@ -100,7 +108,7 @@ void CLI::OutTokens()
 	std::cout << LIME << "============ Token List: ============\n" << RESET;
 	std::cout <<  " Line" <<  "   Pos" << "   Code" << "           Lexeme\n" << std::endl;
 
-	for (const Token& token : m_LexerData->Tokens)
+	for (const Token& token : *(m_LexerData->Tokens))
 	{
 
 		int32_t padding = (lineWidth - std::to_string(token.Line).size()) / 2;
@@ -109,8 +117,8 @@ void CLI::OutTokens()
 		padding = (posWidth - std::to_string(token.Position).size()) / 2;
 		std::cout<< "[" << TEAL << std::setw(posWidth - padding) << token.Position << RESET << std::setw(padding+1) << "]";
 
-		padding = (codeWidth - std::to_string(token.Code).size()) / 2;
-		std::cout << CRIMSON << std::setw(codeWidth - padding) << token.Code << RESET << std::setw(padding + 1) << "=";
+		padding = (codeWidth - std::to_string(+token.Code).size()) / 2;
+		std::cout << CRIMSON << std::setw(codeWidth - padding) << +token.Code << RESET << std::setw(padding + 1) << "=";
 
 		size_t lex = token.Lexeme.size();
 		padding = (lexemeWidth - lex) / 2;
@@ -124,7 +132,7 @@ void CLI::OutTokens()
 	m_Ofs << "============ Token List: ============\n";
 	m_Ofs << " Line" << "   Pos" << "   Code" << "           Lexeme\n" << std::endl;
 
-	for (const Token& token : m_LexerData->Tokens)
+	for (const Token& token : *(m_LexerData->Tokens))
 	{
 		int32_t padding = (lineWidth - std::to_string(token.Line).size()) / 2;
 		m_Ofs << "|" << std::right << std::setw(lineWidth - padding) << token.Line << std::setw(padding + 1) << "]";
@@ -132,8 +140,8 @@ void CLI::OutTokens()
 		padding = (posWidth - std::to_string(token.Position).size()) / 2;
 		m_Ofs << "[" << std::setw(posWidth - padding) << token.Position << std::setw(padding + 1) << "]";
 
-		padding = (codeWidth - std::to_string(token.Code).size()) / 2;
-		m_Ofs << std::setw(codeWidth - padding) << token.Code << std::setw(padding + 1) << "=";
+		padding = (codeWidth - std::to_string(+token.Code).size()) / 2;
+		m_Ofs << std::setw(codeWidth - padding) << +token.Code << std::setw(padding + 1) << "=";
 
 		padding = (lexemeWidth - token.Lexeme.size()) / 2;
 		m_Ofs << std::setw(lexemeWidth - padding) << std::right << "<" + token.Lexeme + ">" << std::setw(padding + 1) << " " << std::endl;
@@ -156,6 +164,11 @@ void CLI::OutConstantsTable()
 void CLI::OutKeywordsTable()
 {
 	DisplayTable(m_LexerData->KeyWordsTable, "Keywords Table");
+}
+
+void CLI::OutAST()
+{
+	 // TODO : Implement OutAST
 }
 
 void CLI::OutOptions()
