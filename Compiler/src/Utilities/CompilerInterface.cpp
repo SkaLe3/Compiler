@@ -166,9 +166,10 @@ void CLI::OutKeywordsTable()
 	DisplayTable(m_LexerData->KeyWordsTable, "Keywords Table");
 }
 
-void CLI::OutAST()
+void CLI::OutAST(const std::string& ast)
 {
-	 // TODO : Implement OutAST
+	std::cout << "Syntax Tree:\n";
+	std::cout << ast << "\n";
 }
 
 void CLI::OutOptions()

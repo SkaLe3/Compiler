@@ -1,5 +1,4 @@
-#ifndef PARSER_H_
-#define PARSER_H_
+#pragma once
 
 #include "Data/Token.h"
 #include "Data/ASTNode.h"
@@ -38,8 +37,9 @@ public:
 	Ref<ASTNode> ParseVariableIndetifier();
 	Ref<ASTNode> ParseProcedureIdentifier();
 
+	Ref<ASTNode> GetAST();
+
 private:
-	bool Match(const ETokenCode& expected);
 	template <typename... TokenKind>
 	bool Match(const ETokenCode& first, const TokenKind&... tokenKinds)
 	{
@@ -48,7 +48,7 @@ private:
 		return Match(tokenKinds...);
 	}
 
-
+	bool Match(const ETokenCode& expected);
 	bool Check(const ETokenCode& expected);
 	std::vector<Token>::iterator Advance();
 	bool IsAtEnd();
@@ -63,6 +63,7 @@ private:
 private:
 	std::shared_ptr<std::vector<Token>> m_TokenSequense;
 	std::vector<Token>::iterator m_CurrentToken;
+	Ref<ASTNode> m_AST;
 
 
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
@@ -71,4 +72,3 @@ private:
 };
 
 
-#endif // PARSER_H_

@@ -1,6 +1,5 @@
-#ifndef INODE_H_
-#define INODE_H_
-	
+#pragma once
+
 #include "Data/Token.h"
 
 #include <string>
@@ -11,12 +10,19 @@
 template<typename T>
 using Ref = std::shared_ptr<T>;
 
+namespace AST
+{
+	class Visitor;
+}
+
 struct ASTNode 
 {
 public:
 	virtual ~ASTNode() = default;
 	virtual std::vector<Ref<ASTNode>> GetData() = 0;
 	virtual std::string ToString() = 0;
+
+	virtual void Accept(AST::Visitor& visitor) = 0;
 
 };
 
@@ -63,5 +69,5 @@ namespace AST
 	Ref<ASTNode> MakeProcedureIdentifier(Ref<ASTNode> id);
 	Ref<ASTNode> MakeIdentifier(ETokenCode id);
 	Ref<ASTNode> MakeConstant(int64_t value);
+
 }
-#endif

@@ -1,5 +1,4 @@
-#ifndef ERROR_H_
-#define ERROR_H_
+#pragma once
 
 #include <string>
 #include <cstdint>
@@ -45,6 +44,3 @@ protected:
 
 	std::string m_Message;
 };
-
-
-#endif /* ERROR_H_*/

@@ -1,6 +1,4 @@
-#ifndef TOKEN_H_
-#define TOKEN_H_
-
+#pragma once
 
 
 #include <string>
@@ -50,10 +48,4 @@ struct Token
 	uint32_t Code;
 	std::string Lexeme;
 
-// 	static Token New(const ETokenCode& token)
-// 	{
-// 		return Token(0, 0, token, "");
-// 	}
 };
-
-#endif /* TOKEN_H_ */

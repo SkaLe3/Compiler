@@ -8,7 +8,7 @@ Parser::Parser(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_p
 
 void Parser::Parse()
 {
-	ParseTranslationUnit();
+	m_AST = ParseTranslationUnit();
 }
 
 Ref<ASTNode> Parser::ParseTranslationUnit()
@@ -118,6 +118,11 @@ Ref<ASTNode> Parser::ParseVariableIndetifier()
 Ref<ASTNode> Parser::ParseProcedureIdentifier()
 {
 	return nullptr;
+}
+
+Ref<ASTNode> Parser::GetAST()
+{
+	return m_AST;
 }
 
 bool Parser::Match(const ETokenCode& expected)

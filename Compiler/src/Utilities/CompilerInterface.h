@@ -1,5 +1,4 @@
-#ifndef COMPILERINTERFACE_H_
-#define COMPILERINTERFACE_H_
+#pragma once
 
 #include "Errors/ErrorHandler.h"
 #include "Lexer/Lexer.h"
@@ -19,7 +18,7 @@ public:
 	virtual void OutConstantsTable() = 0;
 	virtual void OutKeywordsTable() = 0;
 
-	virtual void OutAST() = 0;
+	virtual void OutAST(const std::string& ast) = 0;
 
 	virtual void OutOptions() = 0;
 
@@ -50,7 +49,7 @@ public:
 	virtual void OutConstantsTable() override;
 	virtual void OutKeywordsTable() override;
 
-	virtual void OutAST() override;
+	virtual void OutAST(const std::string& ast) override;
 
 	virtual void OutOptions() override;
 
@@ -61,6 +60,3 @@ private:
 	void DisplayTable(const std::unordered_map<std::string, uint32_t>& table, const std::string& tableHeader);
 
 };
-
-
-#endif /* COMPILERINTERFACE_H_ */

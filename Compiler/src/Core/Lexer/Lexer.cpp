@@ -2,6 +2,8 @@
 #include "Errors/ErrorHandler.h"
 #include "Data/SymbolTables.h"
 
+#include <utility>
+
 Lexer::Lexer(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_ptr<ErrorHandler> errorHandler)
 	: m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler), m_Instigator(EErrorInstigator::Lexer), m_TokenSequence(tokenSequence)
 {
@@ -53,6 +55,8 @@ void Lexer::Scan(const std::string& filePath)
 
 	}
 	m_InputFile.close();
+
+	ReverseTables();
 }
 
 std::shared_ptr<LexerData> Lexer::GetLexerData()
@@ -298,6 +302,19 @@ void Lexer::EndCommentState(size_t line, size_t pos)
 	}
 
 	InCommentState(line, pos);
+}
+
+void Lexer::ReverseTables()
+{
+	for (const auto& pair : KeyWordsTable) {
+		Reverse_KeyWordsTable[pair.second] = pair.first;
+	}
+	for (const auto& pair : ConstantsTable) {
+		Reverse_ConstantsTable[pair.second] = pair.first;
+	}
+	for (const auto& pair : IdentifiersTable) {
+		Reverse_IdentifiersTable[pair.second] = pair.first;
+	}
 }
 
 Error Lexer::CreateSyntaxError(const std::string& errorMessage, uint32_t line, uint32_t pos)

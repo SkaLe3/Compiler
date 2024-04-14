@@ -3,6 +3,7 @@
 #include "Errors/Error.h"
 #include "Lexer/Lexer.h"
 #include "Utilities/Log.h"
+#include "Parser/PrintVisitor.h"
 
 #include <cstdlib>
 
@@ -82,6 +83,8 @@ void Driver::Start()
 	}
 
 	m_UI->OutLexerResult();
+	AST::PrintVisitor printer;
+	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));
 
 
 }

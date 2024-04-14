@@ -13,6 +13,7 @@ void Compiler::Compile(const std::string& filePath)
 {
 	m_Lexer->Scan(filePath);
 	m_Parser->Parse();
+	m_AST = m_Parser->GetAST();
 }
 
 std::shared_ptr<LexerData> Compiler::GetLexerData()
@@ -20,4 +21,8 @@ std::shared_ptr<LexerData> Compiler::GetLexerData()
 	return m_Lexer->GetLexerData();
 }
 
+Ref<ASTNode> Compiler::GetAST()
+{
+	return m_AST;
+}
 

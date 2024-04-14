@@ -1,5 +1,4 @@
-#ifndef SYMBOL_TABLES_H_
-#define SYMBOL_TABLES_H_
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -8,4 +7,7 @@ extern std::unordered_map<std::string, uint32_t> ConstantsTable;
 extern std::unordered_map<std::string, uint32_t> IdentifiersTable;
 extern std::unordered_map<std::string, uint32_t> KeyWordsTable;
 
-#endif // SYMBOL_TABLES_H_
+extern std::unordered_map<uint32_t, std::string> Reverse_ConstantsTable;
+extern std::unordered_map<uint32_t, std::string> Reverse_IdentifiersTable;
+extern std::unordered_map<uint32_t, std::string> Reverse_KeyWordsTable;
+

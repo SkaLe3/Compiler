@@ -1,7 +1,11 @@
-#ifndef NODES_H_
-#define NODES_H_
+#pragma once
 
 #include "ASTNode.h"
+
+namespace AST
+{
+	class Visitor;
+}
 
 struct NSignalProgram : public ASTNode
 {
@@ -10,6 +14,7 @@ struct NSignalProgram : public ASTNode
 	Ref<ASTNode> Program;
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 
 };
 struct NProgram : public ASTNode
@@ -25,6 +30,7 @@ struct NProgram : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NBlock : public ASTNode
 {
@@ -38,6 +44,7 @@ struct NBlock : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 
 struct NVariableDeclarations : public ASTNode
@@ -50,6 +57,7 @@ struct NVariableDeclarations : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NDeclarationsList : public ASTNode
 {
@@ -61,6 +69,7 @@ struct NDeclarationsList : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NDeclaration : public ASTNode
 {
@@ -74,6 +83,7 @@ struct NDeclaration : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NAttribute : public ASTNode
 {
@@ -83,6 +93,7 @@ struct NAttribute : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NStmt : public ASTNode
 {
@@ -98,6 +109,7 @@ struct NStmtsList : public NStmt
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NIfStmt : public NStmt
 {
@@ -110,6 +122,7 @@ struct NIfStmt : public NStmt
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NAssignStmt : public NStmt
 {
@@ -123,6 +136,7 @@ struct NAssignStmt : public NStmt
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 
 struct NConditionStmt : public NStmt
@@ -135,6 +149,7 @@ struct NConditionStmt : public NStmt
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NIncompleteConditionStmt : public ASTNode
 {
@@ -148,6 +163,7 @@ struct NIncompleteConditionStmt : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NAlternativePart : public ASTNode
 {
@@ -160,6 +176,7 @@ struct NAlternativePart : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NConditionalExpr : public ASTNode
 {
@@ -172,6 +189,7 @@ struct NConditionalExpr : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NExpr : public ASTNode
 {
@@ -185,6 +203,7 @@ struct NVariableIdentifier : public NExpr
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 
 struct NProcedureIdentifier : public ASTNode
@@ -195,6 +214,7 @@ struct NProcedureIdentifier : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 
 struct NIdentifier : public ASTNode
@@ -205,6 +225,7 @@ struct NIdentifier : public ASTNode
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
 struct NConstant : public NExpr
 {
@@ -214,6 +235,5 @@ struct NConstant : public NExpr
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
+	virtual void Accept(AST::Visitor& visitor) override;
 };
-
-#endif // NODES_H_

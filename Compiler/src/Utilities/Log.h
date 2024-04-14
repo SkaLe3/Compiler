@@ -1,5 +1,4 @@
-#ifndef LOG_H_
-#define LOG_H_
+#pragma once
 
 #include <iostream>
 
@@ -77,5 +76,3 @@ private:
 #define LOG_TRACE
 #endif
 
-
-#endif /* LOG_H_ */

@@ -1,5 +1,4 @@
-#ifndef LEXER_H_
-#define LEXER_H_
+#pragma once
 
 #include "Data/Token.h"
 #include "Errors/Error.h"
@@ -60,6 +59,8 @@ private:
 	void InCommentState(size_t line, size_t pos);
 	void EndCommentState(size_t line, size_t pos);
 
+	void ReverseTables();
+
 private:
 	Error CreateSyntaxError(const std::string& errorMessage, uint32_t line, uint32_t pos);
 
@@ -82,5 +83,3 @@ private:
 
 	EErrorInstigator m_Instigator;
 };
-
-#endif /* LEXER_H_ */

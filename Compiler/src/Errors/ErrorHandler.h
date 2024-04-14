@@ -1,5 +1,4 @@
-#ifndef ERROR_HANDLER_H_
-#define ERROR_HANDLER_H_
+#pragma once
 
 #include "Error.h"
 
@@ -32,5 +31,3 @@ private:
 	std::shared_ptr<std::vector<Error>> m_Errors;
 	bool bFatalError;
 };
-
-#endif /* ERROR_HANDLER_H_ */

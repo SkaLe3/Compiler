@@ -1,5 +1,4 @@
-#ifndef COMPILER_H_
-#define COMPILER_H_
+#pragma once
 
 #include "Lexer/Lexer.h"
 #include "Parser/Parser.h"
@@ -18,6 +17,7 @@ public:
 	void Compile(const std::string& filePath);
 
 	std::shared_ptr<LexerData> GetLexerData();
+	Ref<ASTNode> GetAST();
 private:
 
 
@@ -28,7 +28,6 @@ private:
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
 
 	std::shared_ptr<std::vector<Token>>	 m_TokenSequence;
+	Ref<ASTNode> m_AST;
 
 };
-
-#endif /* COMPILER_H_ */

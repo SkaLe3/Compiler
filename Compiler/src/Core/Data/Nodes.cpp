@@ -1,6 +1,7 @@
 #include "Nodes.h"
+#include "Parser/Visitor.h"
 
-
+using namespace AST;
 
 std::vector<Ref<ASTNode>> NSignalProgram::GetData()
 {
@@ -10,6 +11,11 @@ std::vector<Ref<ASTNode>> NSignalProgram::GetData()
 std::string NSignalProgram::ToString()
 {
 	return std::string();
+}
+
+void NSignalProgram::Accept(AST::Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NProgram::GetData()
@@ -22,6 +28,11 @@ std::string NProgram::ToString()
 	return std::string();
 }
 
+void NProgram::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NBlock::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -30,6 +41,11 @@ std::vector<Ref<ASTNode>> NBlock::GetData()
 std::string NBlock::ToString()
 {
 	return std::string();
+}
+
+void NBlock::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NVariableDeclarations::GetData()
@@ -42,6 +58,11 @@ std::string NVariableDeclarations::ToString()
 	return std::string();
 }
 
+void NVariableDeclarations::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NDeclarationsList::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -50,6 +71,11 @@ std::vector<Ref<ASTNode>> NDeclarationsList::GetData()
 std::string NDeclarationsList::ToString()
 {
 	return std::string();
+}
+
+void NDeclarationsList::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NDeclaration::GetData()
@@ -62,6 +88,11 @@ std::string NDeclaration::ToString()
 	return std::string();
 }
 
+void NDeclaration::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NAttribute::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -70,6 +101,11 @@ std::vector<Ref<ASTNode>> NAttribute::GetData()
 std::string NAttribute::ToString()
 {
 	return std::string();
+}
+
+void NAttribute::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NStmtsList::GetData()
@@ -82,6 +118,11 @@ std::string NStmtsList::ToString()
 	return std::string();
 }
 
+void NStmtsList::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NIfStmt::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -90,6 +131,11 @@ std::vector<Ref<ASTNode>> NIfStmt::GetData()
 std::string NIfStmt::ToString()
 {
 	return std::string();
+}
+
+void NIfStmt::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NAssignStmt::GetData()
@@ -102,6 +148,11 @@ std::string NAssignStmt::ToString()
 	return std::string();
 }
 
+void NAssignStmt::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NConditionStmt::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -110,6 +161,11 @@ std::vector<Ref<ASTNode>> NConditionStmt::GetData()
 std::string NConditionStmt::ToString()
 {
 	return std::string();
+}
+
+void NConditionStmt::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NIncompleteConditionStmt::GetData()
@@ -122,6 +178,11 @@ std::string NIncompleteConditionStmt::ToString()
 	return std::string();
 }
 
+void NIncompleteConditionStmt::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NAlternativePart::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -130,6 +191,11 @@ std::vector<Ref<ASTNode>> NAlternativePart::GetData()
 std::string NAlternativePart::ToString()
 {
 	return std::string();
+}
+
+void NAlternativePart::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NConditionalExpr::GetData()
@@ -142,6 +208,11 @@ std::string NConditionalExpr::ToString()
 	return std::string();
 }
 
+void NConditionalExpr::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NVariableIdentifier::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -150,6 +221,11 @@ std::vector<Ref<ASTNode>> NVariableIdentifier::GetData()
 std::string NVariableIdentifier::ToString()
 {
 	return std::string();
+}
+
+void NVariableIdentifier::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 std::vector<Ref<ASTNode>> NProcedureIdentifier::GetData()
@@ -162,6 +238,11 @@ std::string NProcedureIdentifier::ToString()
 	return std::string();
 }
 
+void NProcedureIdentifier::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NIdentifier::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -172,6 +253,11 @@ std::string NIdentifier::ToString()
 	return std::string();
 }
 
+void NIdentifier::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
+}
+
 std::vector<Ref<ASTNode>> NConstant::GetData()
 {
 	return std::vector<Ref<ASTNode>>();
@@ -180,6 +266,11 @@ std::vector<Ref<ASTNode>> NConstant::GetData()
 std::string NConstant::ToString()
 {
 	return std::string();
+}
+
+void NConstant::Accept(Visitor& visitor)
+{
+	visitor.Visit(*this);
 }
 
 namespace AST
