@@ -8,6 +8,7 @@ Parser::Parser(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_p
 
 void Parser::Parse()
 {
+	m_CurrentToken = m_TokenSequense->begin();
 	m_AST = ParseTranslationUnit();
 }
 
@@ -21,7 +22,7 @@ Ref<ASTNode> Parser::ParseProgram()
 {
 	if (!Match(ETokenCode::KW_PROGRAM))
 	{
-		auto error = CreateSyntaxError("Expect 'PROGRAM' at the start of the translation unit.", *Peek());	
+		auto error = CreateSyntaxError("'PROGRAM' expected at the start of the translation unit.", *Peek());	
 		m_ErrorHandler->ReportError(error);
 		return nullptr;
 	}
@@ -33,21 +34,42 @@ Ref<ASTNode> Parser::ParseProgram()
 		auto error = CreateSyntaxError("Missing program name.", *Peek());
 		m_ErrorHandler->ReportError(error);
 	}
-	auto semicolon = Consume((ETokenCode)(uint32_t)';', "Expect ';' at the end of program declaration.");
+	auto semicolon = Consume((ETokenCode)(uint32_t)';', "';' expected at the end of the program declaration.");
+	ETokenCode semicolonCode = ETokenCode::None;
+	if (semicolon != m_TokenSequense->end())
+		semicolonCode = (ETokenCode)semicolon->Code;
+
 //	if (!semicolon)
 //		Synchronize();
+
 	auto block = ParseBlock();
 
-	auto dot = Consume((ETokenCode)(uint32_t)'.', "Expect '.' at the end of the program.");
-	
-	auto node = AST::MakeProgram(program, procedureIdentifier, (ETokenCode)semicolon->Code, block, (ETokenCode)dot->Code);
+	auto dot = Consume((ETokenCode)(uint32_t)'.', "'.' expected at the end of the program.");
+	ETokenCode dotCode = ETokenCode::None;
+	if (dot != m_TokenSequense->end())
+		dotCode = (ETokenCode)dot->Code;
+	auto node = AST::MakeProgram(program, procedureIdentifier, semicolonCode, block, dotCode);
 
 	return node;
 }
 
 Ref<ASTNode> Parser::ParseBlock()
 {
-	return nullptr;
+	auto varDecl = ParseVariableDeclarations();
+	Advance();
+	auto begin = Consume(ETokenCode::KW_BEGIN, "'BEGIN' expected but '" + m_CurrentToken->Lexeme + "' found");
+	ETokenCode beginCode = ETokenCode::None;
+	if (begin != m_TokenSequense->end())
+		beginCode = (ETokenCode)begin->Code;
+
+	auto stmtList = ParseStatementsList();
+	auto end = Consume(ETokenCode::KW_END, "'END' expected but '" + m_CurrentToken->Lexeme + "' found");
+	ETokenCode endCode = ETokenCode::None;
+	if (begin != m_TokenSequense->end())
+		endCode = (ETokenCode)end->Code;
+	auto node = AST::MakeBlock(varDecl, beginCode, stmtList, endCode);
+
+	return node;
 }
 
 Ref<ASTNode> Parser::ParseVariableDeclarations()
@@ -117,6 +139,26 @@ Ref<ASTNode> Parser::ParseVariableIndetifier()
 
 Ref<ASTNode> Parser::ParseProcedureIdentifier()
 {
+	auto identifier = ParseIdentifier();
+	return AST::MakeProcedureIdentifier(identifier);
+}
+
+Ref<ASTNode> Parser::ParseIdentifier()
+{
+	if (!Match(ETokenCode::IdentifierBase))
+	{
+		auto error = CreateSyntaxError("Illegal symbol" + m_CurrentToken->Lexeme + ". Identifier expected", *Peek());
+		m_ErrorHandler->ReportError(error);
+		return nullptr;
+	}
+	auto identifier = Previous()->Code;
+	auto node = AST::MakeIdentifier(identifier);
+
+	return node;
+}
+
+Ref<ASTNode> Parser::ParseConstant()
+{
 	return nullptr;
 }
 
@@ -135,9 +177,14 @@ bool Parser::Match(const ETokenCode& expected)
 	return false;
 }
 
+
 bool Parser::Check(const ETokenCode& expected)
 {
 	if (IsAtEnd()) return false;
+	if (Peek()->Code > 501 && Peek()->Code < 1001)
+		return +expected == 501;
+	if (Peek()->Code > 1001)
+		return +expected == 1001;
 	return Peek()->Code == +expected;
 }
 

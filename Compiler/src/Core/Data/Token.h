@@ -48,4 +48,5 @@ struct Token
 	uint32_t Code;
 	std::string Lexeme;
 
+	bool IsIdentifier() { return Code > 1001; }
 };

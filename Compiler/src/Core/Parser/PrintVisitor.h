@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#define SafeAccept(expr) do { if (IsValid(*expr)) { (expr)->Accept(*this); } else { PrintNullptr(); } } while (false)
+#define SafeAccept(expr) do { if (IsValid(expr.get())) { (expr)->Accept(*this); } else { PrintNullptr(); } } while (false)
 
 namespace AST
 {
@@ -41,22 +41,22 @@ namespace AST
 	public:
 		void SetDelimeter(const std::string& delim) { m_Delim = delim; }
 	private:
-		void AddOffset() { m_Offset += m_Delim; }
-		void RemoveOffset() { if (!m_Offset.empty()) m_Offset.pop_back(); }
+		void AddOffset();
+		void RemoveOffset();
 
 		void PrintAttribute(const std::string& str);
 		void StartNode(const std::string& str);
 		void EndNode();
 
-		bool IsValid(ASTNode& node) { return true; }
-		void PrintNullptr() { m_SS << m_Offset <<"<empty>\n"; }
+		bool IsValid(ASTNode* node) { return node != nullptr; }
+		void PrintNullptr();
 		std::string KeywordToString(ETokenCode key);
 		std::string ConstantToString(int64_t key);
-		std::string IdentifierToString(ETokenCode key);
-		std::string DelimToString(ETokenCode key) { return +key + " " + char(+key); }
+		std::string IdentifierToString(uint32_t key);
+		std::string DelimToString(ETokenCode key);
 	private:
 		std::stringstream m_SS;
-		std::string m_Delim = "$";
+		std::string m_Delim = "-";
 		std::string m_Offset;
 	};
 }

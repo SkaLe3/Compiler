@@ -8,7 +8,6 @@
 #include <vector>
 #include <memory>
 
-// TODO : Create VisitorPrint for AST
 
 class ErrorHandler;
 
@@ -36,10 +35,14 @@ public:
 	Ref<ASTNode> ParseExpression();
 	Ref<ASTNode> ParseVariableIndetifier();
 	Ref<ASTNode> ParseProcedureIdentifier();
+	Ref<ASTNode> ParseIdentifier();
+	Ref<ASTNode> ParseConstant();
 
 	Ref<ASTNode> GetAST();
 
 private:
+
+
 	template <typename... TokenKind>
 	bool Match(const ETokenCode& first, const TokenKind&... tokenKinds)
 	{

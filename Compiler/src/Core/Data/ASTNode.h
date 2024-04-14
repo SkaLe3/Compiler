@@ -67,7 +67,7 @@ namespace AST
 	Ref<ASTNode> MakeConditionalExpr(Ref<NExpr> expr1, ETokenCode op, Ref<NExpr> expr2);
 	Ref<ASTNode> MakeVariableIdentifier(Ref<ASTNode> id);
 	Ref<ASTNode> MakeProcedureIdentifier(Ref<ASTNode> id);
-	Ref<ASTNode> MakeIdentifier(ETokenCode id);
+	Ref<ASTNode> MakeIdentifier(uint32_t id);
 	Ref<ASTNode> MakeConstant(int64_t value);
 
 }

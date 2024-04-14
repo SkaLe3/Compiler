@@ -1,8 +1,10 @@
 #include "Lexer.h"
 #include "Errors/ErrorHandler.h"
 #include "Data/SymbolTables.h"
-
 #include <utility>
+
+// TODO : delete
+#include <iostream>
 
 Lexer::Lexer(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_ptr<ErrorHandler> errorHandler)
 	: m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler), m_Instigator(EErrorInstigator::Lexer), m_TokenSequence(tokenSequence)

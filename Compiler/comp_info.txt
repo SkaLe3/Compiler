@@ -1,0 +1,8 @@
+============ Error List: ============
+
+[Parser] (1,14): syntax error:  at ';'. ';' expected at the end of the program declaration.
+[Parser] (2,1): syntax error:  at 'VAR'. 'BEGIN' expected but 'VAR' found
+[Parser] (2,1): syntax error:  at 'VAR'. 'END' expected but 'VAR' found
+[Parser] (2,1): syntax error:  at 'VAR'. '.' expected at the end of the program.
+=====================================
+

@@ -180,7 +180,7 @@ void CLI::OutOptions()
 
 void CLI::UsageHint(char* name)
 {
-	std::cout << "Usage: " << name << " <source_file> [options...] <out_file>\n";
+	std::cout << "Usage: " << "./ssc" << " <source_file> [options...] <out_file>\n";
 }
 
 void CLI::DisplayTable(const std::unordered_map<std::string, uint32_t>& table, const std::string& tableHeader)

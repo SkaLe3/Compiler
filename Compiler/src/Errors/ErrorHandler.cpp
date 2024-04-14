@@ -28,11 +28,11 @@ Error ErrorHandler::CreateSyntaxError(const std::string& errorMessage, const Tok
 {
 	if ((ETokenCode)token.Code == ETokenCode::Eof)
 	{
-		return CreateError(" at end " + errorMessage, token, instigator, EErrorType::SyntaxError);
+		return CreateError(" at end. " + errorMessage, token, instigator, EErrorType::SyntaxError);
 	}
 	else
 	{
-		return CreateError(" at '" + token.Lexeme + "' " + errorMessage, token, instigator, EErrorType::SyntaxError );
+		return CreateError(" at '" + token.Lexeme + "'. " + errorMessage, token, instigator, EErrorType::SyntaxError );
 	}
 }
 

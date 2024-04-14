@@ -219,9 +219,9 @@ struct NProcedureIdentifier : public ASTNode
 
 struct NIdentifier : public ASTNode
 {
-	NIdentifier(ETokenCode id) : Identifier(id) {}
+	NIdentifier(uint32_t id) : Identifier(id) {}
 
-	ETokenCode Identifier;
+	uint32_t Identifier;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;

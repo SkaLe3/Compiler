@@ -222,6 +222,16 @@ void AST::PrintVisitor::Visit(NConstant& node)
 }
 
 
+void AST::PrintVisitor::AddOffset()
+{
+	m_Offset += m_Delim;
+}
+
+void AST::PrintVisitor::RemoveOffset()
+{
+	if (!m_Offset.empty()) m_Offset.pop_back();
+}
+
 void AST::PrintVisitor::PrintAttribute(const std::string& str)
 {
 	AddOffset();
@@ -240,6 +250,13 @@ void AST::PrintVisitor::EndNode()
 	RemoveOffset();
 }
 
+void AST::PrintVisitor::PrintNullptr()
+{
+	AddOffset();
+	m_SS << m_Offset << "<empty>\n";
+	RemoveOffset();
+}
+
 std::string AST::PrintVisitor::KeywordToString(ETokenCode key)
 {
 	return +key + " " + Reverse_KeyWordsTable[+key]; 
@@ -250,7 +267,14 @@ std::string AST::PrintVisitor::ConstantToString(int64_t key)
 	return key + " " + Reverse_ConstantsTable[key]; 
 }
 
-std::string AST::PrintVisitor::IdentifierToString(ETokenCode key)
+std::string AST::PrintVisitor::IdentifierToString(uint32_t key)
 {
 	return +key + " " + Reverse_IdentifiersTable[+key];
+}
+
+std::string AST::PrintVisitor::DelimToString(ETokenCode key)
+{
+	if (key == ETokenCode::None)
+		return "<Error Symbol>";
+	return +key + " " + char(+key);
 }

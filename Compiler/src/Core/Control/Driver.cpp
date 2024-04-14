@@ -17,9 +17,14 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
+#if 0
 		m_UI->UsageHint(argv[0]);
 		Terminate();								
 		return;
+#else
+		m_Options.SourceFile = ".\\tests\\parser_true_test1.sig";
+		return;
+#endif
 	}
 
 	bool matches = CheckSourceExtension(argv[1]);
@@ -31,7 +36,7 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 	}
 
 	m_Options.SourceFile = argv[1];
-
+																 // TODO : Fix corner cases error 
 	for (int i = 2; i < argc-1; i++)
 	{
 		if (std::string(argv[i]) == "-o")
@@ -44,13 +49,13 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 
 bool Driver::CheckSourceExtension(const std::string& filePath)
 {
-	size_t dotPos = filePath.find('.');
+	size_t dotPos = filePath.rfind('.');
 	if (dotPos != std::string::npos)
 	{
 		std::string extension = filePath.substr(dotPos + 1);
 		if (extension != "sig")
 		{
-			auto error = ErrorHandler::CreateGeneralError(std::string("Incorrect input file type: .") + extension + "\n message: expected \".sig\"", EErrorInstigator::FileIO);
+			auto error = ErrorHandler::CreateGeneralError(std::string("Incorrect input file type: .") + extension + "\n message: expected file extension \".sig\"", EErrorInstigator::FileIO);
 			m_ErrorHandler->ReportError(error);
 			return false;
 		}
@@ -82,7 +87,7 @@ void Driver::Start()
 		return;
 	}
 
-	m_UI->OutLexerResult();
+	//m_UI->OutLexerResult();
 	AST::PrintVisitor printer;
 	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));
 
