@@ -8,6 +8,7 @@ enum class ETokenCode : uint32_t
 {
 	None = 0,
 	Eof,
+	Empty,
 
 	D_Dot = 46,
 	D_Colon = 58,

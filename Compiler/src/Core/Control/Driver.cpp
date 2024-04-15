@@ -22,7 +22,7 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 		Terminate();								
 		return;
 #else
-		m_Options.SourceFile = ".\\tests\\parser_true_test1.sig";
+		m_Options.SourceFile = ".\\tests\\parser_false_test3.sig";
 		return;
 #endif
 	}
@@ -88,7 +88,7 @@ void Driver::Start()
 	}
 
 	//m_UI->OutLexerResult();
-	AST::PrintVisitor printer;
+	AST::PrintVisitor printer;	  // TODO : Move creation to UI class
 	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));
 
 

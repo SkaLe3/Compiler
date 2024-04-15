@@ -1,0 +1,4 @@
+PROGRAM test2;
+BEGIN 
+
+END. 

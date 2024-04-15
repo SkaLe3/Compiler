@@ -49,11 +49,13 @@ struct NBlock : public ASTNode
 
 struct NVariableDeclarations : public ASTNode
 {
-	NVariableDeclarations(ETokenCode var, Ref<ASTNode> declList)
-		: Var(var), DeclList(declList) {}
+	NVariableDeclarations(ETokenCode var, Ref<ASTNode> declList, bool empty)
+		: Var(var), DeclList(declList), Empty(empty) {}
 
 	ETokenCode Var;
 	Ref<ASTNode> DeclList;
+
+	bool Empty = false;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
@@ -61,11 +63,13 @@ struct NVariableDeclarations : public ASTNode
 };
 struct NDeclarationsList : public ASTNode
 {
-	NDeclarationsList(Ref<ASTNode> decl, Ref<ASTNode> declList)
-		: Decl(decl), DeclList(declList) {}
+	NDeclarationsList(Ref<ASTNode> decl, Ref<ASTNode> declList, bool empty)
+		: Decl(decl), DeclList(declList), Empty(empty) {}
 
 	Ref<ASTNode> Decl;
 	Ref<ASTNode> DeclList;
+
+	bool Empty = false;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
@@ -101,11 +105,13 @@ struct NStmt : public ASTNode
 };
 struct NStmtsList : public NStmt
 {
-	NStmtsList(Ref<ASTNode> stmt, Ref<ASTNode> stmtsList)
-		: Stmt(stmt), StmtsList(stmtsList) {}
+	NStmtsList(Ref<ASTNode> stmt, Ref<ASTNode> stmtsList, bool empty)
+		: Stmt(stmt), StmtsList(stmtsList), Empty(empty) {}
 
 	Ref<ASTNode> Stmt;
 	Ref<ASTNode> StmtsList;
+
+	bool Empty = false;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
@@ -168,11 +174,13 @@ struct NIncompleteConditionStmt : public ASTNode
 struct NAlternativePart : public ASTNode
 {
 	
-	NAlternativePart(ETokenCode _else, Ref<ASTNode> stmtsList)
-		: Else(_else), StmtsList(stmtsList) {}
+	NAlternativePart(ETokenCode _else, Ref<ASTNode> stmtsList, bool empty)
+		: Else(_else), StmtsList(stmtsList), Empty(empty) {}
 
 	ETokenCode Else;
 	Ref<ASTNode> StmtsList;
+
+	bool Empty = false;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
@@ -229,9 +237,9 @@ struct NIdentifier : public ASTNode
 };
 struct NConstant : public NExpr
 {
-	NConstant(int64_t value) : Val(value) {}
+	NConstant(uint32_t value) : Val(value) {}
 
-	int64_t Val;
+	uint32_t Val;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;

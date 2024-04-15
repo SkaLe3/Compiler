@@ -2,6 +2,7 @@
 
 #include "Data/SymbolTables.h"
 #include "Data/Nodes.h"
+#include "Utilities/Log.h"
 
 std::string AST::PrintVisitor::Print(Ref<ASTNode> ast)
 {
@@ -18,7 +19,7 @@ std::string AST::PrintVisitor::Print(Ref<ASTNode> ast)
 
 void AST::PrintVisitor::Visit(NSignalProgram& node)
 {
-	m_SS << "<signal-program>\n";
+	m_SS << "|<signal-program>\n";
 
 	SafeAccept(node.Program);
 
@@ -53,6 +54,13 @@ void AST::PrintVisitor::Visit(NVariableDeclarations& node)
 {
 	StartNode("<variable-declarations>");
 
+	if (node.Empty)
+	{
+		PrintEmpty();
+		EndNode();
+		return;
+	}
+
 	PrintAttribute(KeywordToString(node.Var));
 	SafeAccept(node.DeclList);
 
@@ -63,6 +71,12 @@ void AST::PrintVisitor::Visit(NDeclarationsList& node)
 {
 	StartNode("<declarations-list>");
 
+	if (node.Empty)
+	{
+		PrintEmpty();
+		EndNode();
+		return;
+	}
 	SafeAccept(node.Decl);
 	SafeAccept(node.DeclList);
 
@@ -94,9 +108,15 @@ void AST::PrintVisitor::Visit(NStmtsList& node)
 {
 	StartNode("<statements-list>");
 
+	if (node.Empty)
+	{
+		PrintEmpty();
+		EndNode();
+		return;
+	}
+
 	SafeAccept(node.Stmt);
 	SafeAccept(node.StmtsList);
-
 	EndNode();
 }
 
@@ -159,6 +179,13 @@ void AST::PrintVisitor::Visit(NIncompleteConditionStmt& node)
 void AST::PrintVisitor::Visit(NAlternativePart& node)
 {
 	StartNode("<alternative-part>");
+
+	if (node.Empty)
+	{
+		PrintEmpty();
+		EndNode();
+		return;
+	}
 
 	PrintAttribute(KeywordToString(node.Else));
 	SafeAccept(node.StmtsList);
@@ -232,17 +259,21 @@ void AST::PrintVisitor::RemoveOffset()
 	if (!m_Offset.empty()) m_Offset.pop_back();
 }
 
+void AST::PrintVisitor::PrintEmpty()
+{
+	PrintAttribute("<empty>");
+}
+
 void AST::PrintVisitor::PrintAttribute(const std::string& str)
 {
-	AddOffset();
-	m_SS << m_Offset << str << "\n";
+	StartNode(str);
 	RemoveOffset();
 }
 
 void AST::PrintVisitor::StartNode(const std::string& str)
 {
 	AddOffset();
-	m_SS << m_Offset << str << "\n";
+	m_SS << m_Offset << "|" << str << "\n";
 }
 
 void AST::PrintVisitor::EndNode()
@@ -250,31 +281,32 @@ void AST::PrintVisitor::EndNode()
 	RemoveOffset();
 }
 
+
 void AST::PrintVisitor::PrintNullptr()
 {
-	AddOffset();
-	m_SS << m_Offset << "<empty>\n";
-	RemoveOffset();
+	PrintAttribute(std::string(CRIMSON) + "<error-nullptr>" + RESET);
 }
 
 std::string AST::PrintVisitor::KeywordToString(ETokenCode key)
 {
-	return +key + " " + Reverse_KeyWordsTable[+key]; 
+	if (key == ETokenCode::Empty)
+		return std::string(LEMON) + "<error-symbol>" + RESET;
+	return std::to_string(+key) + " [" + Reverse_KeyWordsTable[+key] + "]";
 }
 
-std::string AST::PrintVisitor::ConstantToString(int64_t key)
+std::string AST::PrintVisitor::ConstantToString(uint32_t key)
 {
-	return key + " " + Reverse_ConstantsTable[key]; 
+	return std::to_string(key) + " [" + Reverse_ConstantsTable[key] + "]";
 }
 
 std::string AST::PrintVisitor::IdentifierToString(uint32_t key)
 {
-	return +key + " " + Reverse_IdentifiersTable[+key];
+	return std::to_string(key) + " [" + Reverse_IdentifiersTable[+key] + "]";
 }
 
 std::string AST::PrintVisitor::DelimToString(ETokenCode key)
 {
-	if (key == ETokenCode::None)
-		return "<Error Symbol>";
-	return +key + " " + char(+key);
+	if (key == ETokenCode::Empty)
+		return std::string(LEMON) + "<error-symbol>" + RESET;
+	return std::to_string(+key) + " [" + char(+key) + "]";
 }

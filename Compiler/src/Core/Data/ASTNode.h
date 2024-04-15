@@ -54,20 +54,20 @@ namespace AST
 	Ref<ASTNode> MakeSignalProgram(Ref<ASTNode> program);
 	Ref<ASTNode> MakeProgram(ETokenCode program, Ref<ASTNode> procId, ETokenCode sc, Ref<ASTNode> block, ETokenCode dot);
 	Ref<ASTNode> MakeBlock(Ref<ASTNode> varDecl, ETokenCode begin, Ref<ASTNode> stmtList, ETokenCode end);
-	Ref<ASTNode> MakeVariableDeclarations(ETokenCode var, Ref<ASTNode> declList);
-	Ref<ASTNode> MakeDeclarationsList(Ref<ASTNode> decl, Ref<ASTNode> declList);
+	Ref<ASTNode> MakeVariableDeclarations(ETokenCode var, Ref<ASTNode> declList, bool empty = false);
+	Ref<ASTNode> MakeDeclarationsList(Ref<ASTNode> decl, Ref<ASTNode> declList, bool empty = false);
 	Ref<ASTNode> MakeDeclaration(Ref<ASTNode> varId, ETokenCode colon, Ref<ASTNode> atr, ETokenCode sc);
 	Ref<ASTNode> MakeAttribute(ETokenCode type);
-	Ref<ASTNode> MakeStmtsList(Ref<ASTNode> stmt, Ref<ASTNode> stmtsList);
-	Ref<ASTNode> MakeIfStmts(Ref<ASTNode> condStmt, ETokenCode eif, ETokenCode sc);
-	Ref<ASTNode> MakeAssignStmt(Ref<ASTNode> varId, ETokenCode op, Ref<NExpr> expr, ETokenCode sc);
+	Ref<ASTNode> MakeStmtsList(Ref<ASTNode> stmt, Ref<ASTNode> stmtsList, bool empty = false);
+	Ref<ASTNode> MakeIfStmt(Ref<ASTNode> condStmt, ETokenCode eif, ETokenCode sc);
+	Ref<ASTNode> MakeAssignStmt(Ref<ASTNode> varId, ETokenCode op, Ref<ASTNode> expr, ETokenCode sc);
 	Ref<ASTNode> MakeConditionStmt(Ref<ASTNode> incCondStmt, Ref<ASTNode> alt);
 	Ref<ASTNode> MakeIncompleteConditionStmt(ETokenCode _if, Ref<ASTNode> condExpr, ETokenCode then, Ref<ASTNode> stmtsList);
-	Ref<ASTNode> MakeAlternativePart(ETokenCode _else, Ref<ASTNode> stmtsList);
-	Ref<ASTNode> MakeConditionalExpr(Ref<NExpr> expr1, ETokenCode op, Ref<NExpr> expr2);
+	Ref<ASTNode> MakeAlternativePart(ETokenCode _else, Ref<ASTNode> stmtsList, bool empty = false);
+	Ref<ASTNode> MakeConditionalExpr(Ref<ASTNode> expr1, ETokenCode op, Ref<ASTNode> expr2);
 	Ref<ASTNode> MakeVariableIdentifier(Ref<ASTNode> id);
 	Ref<ASTNode> MakeProcedureIdentifier(Ref<ASTNode> id);
 	Ref<ASTNode> MakeIdentifier(uint32_t id);
-	Ref<ASTNode> MakeConstant(int64_t value);
+	Ref<ASTNode> MakeConstant(uint32_t value);
 
 }

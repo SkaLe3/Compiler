@@ -287,13 +287,13 @@ namespace AST
 	{
 		return std::make_shared<NBlock>(varDecl, begin, stmtList, end);
 	}
-	Ref<ASTNode> MakeVariableDeclarations(ETokenCode var, Ref<ASTNode> declList)
+	Ref<ASTNode> MakeVariableDeclarations(ETokenCode var, Ref<ASTNode> declList, bool empty)
 	{
-		return std::make_shared<NVariableDeclarations>(var, declList);
+		return std::make_shared<NVariableDeclarations>(var, declList, empty);
 	}
-	Ref<ASTNode> MakeDeclarationsList(Ref<ASTNode> decl, Ref<ASTNode> declList)
+	Ref<ASTNode> MakeDeclarationsList(Ref<ASTNode> decl, Ref<ASTNode> declList, bool empty)
 	{
-		return std::make_shared<NDeclarationsList>(decl, declList);
+		return std::make_shared<NDeclarationsList>(decl, declList, empty);
 	}
 	Ref<ASTNode> MakeDeclaration(Ref<ASTNode> varId, ETokenCode colon, Ref<ASTNode> atr, ETokenCode sc)
 	{
@@ -303,11 +303,11 @@ namespace AST
 	{
 		return std::make_shared<NAttribute>(type);
 	}
-	Ref<ASTNode> MakeStmtsList(Ref<ASTNode> stmt, Ref<ASTNode> stmtsList)
+	Ref<ASTNode> MakeStmtsList(Ref<ASTNode> stmt, Ref<ASTNode> stmtsList, bool empty)
 	{
-		return std::make_shared<NStmtsList>(stmt, stmtsList);
+		return std::make_shared<NStmtsList>(stmt, stmtsList, empty);
 	}
-	Ref<ASTNode> MakeIfStmts(Ref<ASTNode> condStmt, ETokenCode eif, ETokenCode sc)
+	Ref<ASTNode> MakeIfStmt(Ref<ASTNode> condStmt, ETokenCode eif, ETokenCode sc)
 	{
 		return std::make_shared<NIfStmt>(condStmt, eif, sc);
 	}
@@ -323,11 +323,11 @@ namespace AST
 	{
 		return std::make_shared<NIncompleteConditionStmt>(_if, condExpr, then, stmtsList);
 	}
-	Ref<ASTNode> MakeAlternativePart(ETokenCode _else, Ref<ASTNode> stmtsList)
+	Ref<ASTNode> MakeAlternativePart(ETokenCode _else, Ref<ASTNode> stmtsList, bool empty)
 	{
-		return std::make_shared<NAlternativePart>(_else, stmtsList);
+		return std::make_shared<NAlternativePart>(_else, stmtsList, empty);
 	}
-	Ref<ASTNode> MakeConditionalExpr(Ref<ASTNode> expr1, ETokenCode op, Ref<NExpr> expr2)
+	Ref<ASTNode> MakeConditionalExpr(Ref<ASTNode> expr1, ETokenCode op, Ref<ASTNode> expr2)
 	{
 		return std::make_shared<NConditionalExpr>(expr1, op, expr2);
 	}
@@ -343,7 +343,7 @@ namespace AST
 	{
 		return std::make_shared<NIdentifier>(id);
 	}
-	Ref<ASTNode> MakeConstant(int64_t value)
+	Ref<ASTNode> MakeConstant(uint32_t value)
 	{
 		return std::make_shared<NConstant>(value);
 	}

@@ -226,7 +226,7 @@ void Lexer::UnaryDelimiterState()
 
 	m_TokenBuffer += m_CurrentCharacter;
 
-	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
+	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentCharacter);
 	Next();
 	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
@@ -238,7 +238,7 @@ void Lexer::MultiDelimiterState()
 	size_t lexemeStartPosition = m_Position;
 
 	m_TokenBuffer += m_CurrentCharacter;
-	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
+	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentCharacter);
 	Next();
 	
 	if (m_CurrentCharacter == '=')
@@ -248,6 +248,7 @@ void Lexer::MultiDelimiterState()
 		{
 			lexemeCode = tableRecord->second;
 		}
+		Next();
 	}
 
 	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);

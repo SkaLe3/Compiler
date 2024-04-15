@@ -44,6 +44,7 @@ namespace AST
 		void AddOffset();
 		void RemoveOffset();
 
+		void PrintEmpty();
 		void PrintAttribute(const std::string& str);
 		void StartNode(const std::string& str);
 		void EndNode();
@@ -51,7 +52,7 @@ namespace AST
 		bool IsValid(ASTNode* node) { return node != nullptr; }
 		void PrintNullptr();
 		std::string KeywordToString(ETokenCode key);
-		std::string ConstantToString(int64_t key);
+		std::string ConstantToString(uint32_t key);
 		std::string IdentifierToString(uint32_t key);
 		std::string DelimToString(ETokenCode key);
 	private:

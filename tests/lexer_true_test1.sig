@@ -6,8 +6,8 @@ BEGIN
 	var2 := 1;
 
 	IF var1 = 111 (* default comment *)
-	THEN var1 := 15;
-	ELSE var1 := 111;
+	THEN var1 := 15
+	ELSE var1 := 111
 	ENDIF; 
 
 	(* illegal character ##$%#*)

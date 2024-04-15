@@ -23,11 +23,12 @@ public:
 	Ref<ASTNode> ParseBlock();
 	Ref<ASTNode> ParseVariableDeclarations();
 	Ref<ASTNode> ParseDeclarationsList();
-	Ref<ASTNode> ParseDeclaration();
+	Ref<ASTNode> ParseDeclaration(bool& bIsDecl);
 	Ref<ASTNode> ParseAttribute();
 	Ref<ASTNode> ParseStatementsList();
 	Ref<ASTNode> ParseStatement();
-	Ref<ASTNode> ParseAssignExpression();
+	Ref<ASTNode> ParseIfStatement();
+	Ref<ASTNode> ParseAssignStatement();
 	Ref<ASTNode> ParseConditionStatement();
 	Ref<ASTNode> ParseIncompleteConditionStatement();
 	Ref<ASTNode> ParseAlternativePart();
