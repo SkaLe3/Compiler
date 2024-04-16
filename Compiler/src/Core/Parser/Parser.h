@@ -23,7 +23,7 @@ public:
 	Ref<ASTNode> ParseBlock();
 	Ref<ASTNode> ParseVariableDeclarations();
 	Ref<ASTNode> ParseDeclarationsList();
-	Ref<ASTNode> ParseDeclaration(bool& bIsDecl);
+	Ref<ASTNode> ParseDeclaration();
 	Ref<ASTNode> ParseAttribute();
 	Ref<ASTNode> ParseStatementsList();
 	Ref<ASTNode> ParseStatement();
@@ -61,6 +61,10 @@ private:
 	std::vector<Token>::iterator Consume(ETokenCode kind, const std::string& message);
 	void Synchronize();
 	void SynchronizeSafe();
+
+	bool IsValid(std::vector<Token>::iterator);
+	ETokenCode TokenCode(std::vector<Token>::iterator);
+	ETokenCode PreviousCode();
 
 private:
 	Error CreateSyntaxError(const std::string& errorMessage, const Token& token);

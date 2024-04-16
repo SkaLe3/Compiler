@@ -14,8 +14,11 @@ std::string GetInstigatorColor(EErrorInstigator inst)
 	{
 	case EErrorInstigator::Lexer:
 		return TEAL;
+	case EErrorInstigator::Parser:
+		return MAGENTA;
 	default:
 		return RESET;
+
 	}
 }
 
@@ -110,6 +113,8 @@ void CLI::OutTokens()
 
 	for (const Token& token : *(m_LexerData->Tokens))
 	{
+		if (token.Code == +ETokenCode::Eof)
+			break;
 
 		int32_t padding = (lineWidth - std::to_string(token.Line).size()) / 2;
 		std::cout << "|" << TEAL << std::right << std::setw(lineWidth - padding) << token.Line << RESET << std::setw(padding + 1) << "]";
@@ -168,12 +173,18 @@ void CLI::OutKeywordsTable()
 
 void CLI::OutAST(const std::string& ast)
 {
-	std::cout << "Syntax Tree:\n";
+	std::cout << AZURE;
+	std::cout << "============ Syntax Tree ============\n\n";
+	std::cout << RESET;
 	std::cout << ast << "\n";
+	std::cout << AZURE;
+	std::cout << "=====================================\n\n";
+	std::cout << RESET;
 }
 
 void CLI::OutOptions()
 {
+	// TODO : Use OutOptions
 	std::cout << "Source file: \n";
 	std::cout << "Out file: \n";
 }

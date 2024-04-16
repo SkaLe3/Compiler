@@ -17,11 +17,11 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		m_UI->UsageHint(argv[0]);
-		Terminate();								
-		return;
-// 		m_Options.SourceFile = ".\\tests\\parser_false_test7.sig";
+// 		m_UI->UsageHint(argv[0]);
+// 		Terminate();								
 // 		return;
+		m_Options.SourceFile = ".\\tests\\parser_true_test1.sig";
+		return;
 	}
 
 	bool matches = CheckSourceExtension(argv[1]);

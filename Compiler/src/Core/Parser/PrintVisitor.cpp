@@ -11,7 +11,7 @@ std::string AST::PrintVisitor::Print(Ref<ASTNode> ast)
 		SafeAccept(program);
 	else
 	{
-		m_SS << "<empty-translation-unit>";
+		m_SS << "Empty translation unit!";
 	}
 	return m_SS.str();
 }
@@ -290,22 +290,22 @@ std::string AST::PrintVisitor::KeywordToString(ETokenCode key)
 {
 	if (key == ETokenCode::Empty)
 		return std::string(LEMON) + "<error-symbol>" + RESET;
-	return std::to_string(+key) + " [" + Reverse_KeyWordsTable[+key] + "]";
+	return TEAL + std::to_string(+key) + RESET + " [" + TEAL + Reverse_KeyWordsTable[+key] + RESET + "]";
 }
 
 std::string AST::PrintVisitor::ConstantToString(uint32_t key)
 {
-	return std::to_string(key) + " [" + Reverse_ConstantsTable[key] + "]";
+	return AZURE + std::to_string(key) + RESET + " [" + AZURE + Reverse_ConstantsTable[key] + RESET + "]";
 }
 
 std::string AST::PrintVisitor::IdentifierToString(uint32_t key)
 {
-	return std::to_string(key) + " [" + Reverse_IdentifiersTable[+key] + "]";
+	return MAGENTA + std::to_string(key) + RESET + " [" + MAGENTA + Reverse_IdentifiersTable[+key] + RESET + "]";
 }
 
 std::string AST::PrintVisitor::DelimToString(ETokenCode key)
 {
 	if (key == ETokenCode::Empty)
 		return std::string(LEMON) + "<error-symbol>" + RESET;
-	return std::to_string(+key) + " [" + char(+key) + "]";
+	return LIME + std::to_string(+key) + RESET+ " [" + LIME + char(+key) + RESET+"]";
 }
