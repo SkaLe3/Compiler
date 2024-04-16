@@ -64,13 +64,15 @@ build/
 
 
 # Custom
-*.vcxproj
-*.vcxproj.filters
+vendor/
 *.bat
+*.lua
+*.sln
 *bin/
 *bit-int/
-CMakeLists.txt
-!GenerateVSProjects.bat
+*.vcxproj
+*.vcxproj.filters
+!Make.bat
 
 
 
