@@ -3,8 +3,6 @@
 #include "Data/SymbolTables.h"
 #include <utility>
 
-// TODO : delete
-#include <iostream>
 
 Lexer::Lexer(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_ptr<ErrorHandler> errorHandler)
 	: m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler), m_Instigator(EErrorInstigator::Lexer), m_TokenSequence(tokenSequence)
@@ -89,7 +87,9 @@ void Lexer::Next()
 	else
 	{
 		m_CurrentSymbol = ESymbolCategories::End;
-		Token& lastToken = m_TokenSequence->back();
+		Token lastToken = { 1, 1, +ETokenCode::Eof, " " };
+		if (!m_TokenSequence->empty())
+			lastToken  = m_TokenSequence->back();
 		m_TokenSequence->emplace_back(lastToken.Line, lastToken.Position, +ETokenCode::Eof, lastToken.Lexeme);
 	}
 }

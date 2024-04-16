@@ -1,4 +1,4 @@
-PROGRAM test3;
+PROGRAM ft3_no_BEGIN;
 VAR var1:INTEGER; var2:FLOAT;
 
 	IF var1 = 111 

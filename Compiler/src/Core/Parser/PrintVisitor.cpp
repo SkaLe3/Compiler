@@ -11,8 +11,7 @@ std::string AST::PrintVisitor::Print(Ref<ASTNode> ast)
 		SafeAccept(program);
 	else
 	{
-		m_SS << " ";
-		// TODO : Make error
+		m_SS << "<empty-translation-unit>";
 	}
 	return m_SS.str();
 }

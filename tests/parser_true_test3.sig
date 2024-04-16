@@ -1,4 +1,4 @@
-PROGRAM test3;
+PROGRAM tt3_empty_VAR;
 VAR
 BEGIN 
 

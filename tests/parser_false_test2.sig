@@ -1,4 +1,4 @@
-PROGRAM test2;
+PROGRAM ft2_mistakes_in_vardecl;
 VAR var1:INTEGER var2:FLOAT; var3 FLOAT; var4:TEGER; :FLOAT; var5:;
 BEGIN 
 	IF var1 = 111 

@@ -1,6 +1,0 @@
-PROGRAM test4;
-BEGIN 
-	IF 222 = 111 
- 	ENDIF;
-
-END. 

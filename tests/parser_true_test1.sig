@@ -1,13 +1,16 @@
-PROGRAM test1;
+PROGRAM tt1_full_grammar_example;
 VAR var1:INTEGER; var2:FLOAT;
 BEGIN 
 
 	var1 := 13; 
-	var2 := 1;
 
 	IF var1 = 111 
-	THEN var1 := 15;
-	ELSE var1 := var2;
+	THEN var1 := var2;
+	ELSE 
+		IF var2 = var1
+		THEN
+		ELSE
+		ENDIF;
 	ENDIF; 
 
 	IF 222 = 222

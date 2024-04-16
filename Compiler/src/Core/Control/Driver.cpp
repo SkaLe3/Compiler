@@ -17,14 +17,11 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-#if 0
 		m_UI->UsageHint(argv[0]);
 		Terminate();								
 		return;
-#else
-		m_Options.SourceFile = ".\\tests\\parser_false_test5.sig";
-		return;
-#endif
+// 		m_Options.SourceFile = ".\\tests\\parser_false_test7.sig";
+// 		return;
 	}
 
 	bool matches = CheckSourceExtension(argv[1]);
@@ -87,10 +84,10 @@ void Driver::Start()
 		return;
 	}
 
-	//m_UI->OutLexerResult();
-	AST::PrintVisitor printer;	  // TODO : Move creation to UI class
-	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));
-
+	m_UI->OutLexerResult();
+	AST::PrintVisitor printer;
+	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));	// TODO : Add output to file
+														// TODO : Output more information
 
 }
 

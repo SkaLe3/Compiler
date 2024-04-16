@@ -1,5 +1,0 @@
-PROGRAM test3;
-VAR
-BEGIN 
-
-END. 

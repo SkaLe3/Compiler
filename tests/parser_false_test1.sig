@@ -1,4 +1,4 @@
-PROGRAM ;
+PROGRAM ; (* no program name *)
 VAR var1:INTEGER; var2:FLOAT;
 BEGIN 
 	IF var1 = 111 

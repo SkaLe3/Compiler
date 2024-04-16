@@ -14,6 +14,8 @@ void Parser::Parse()
 
 Ref<ASTNode> Parser::ParseTranslationUnit()
 {
+	if (IsAtEnd())
+		return nullptr;
 	Ref<ASTNode> program = ParseProgram();
 	return AST::MakeSignalProgram(program);
 }
@@ -159,7 +161,7 @@ Ref<ASTNode> Parser::ParseStatementsList()
 
 	auto stmt = ParseStatement();
 	if (!stmt)
-		return nullptr; // TODO : Create node for <empty>
+		return nullptr;
 	auto stmtList = ParseStatementsList();
 	auto node = AST::MakeStmtsList(stmt, stmtList);
 	return node;
