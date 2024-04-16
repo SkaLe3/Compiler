@@ -3,8 +3,9 @@
 #include "Errors/Error.h"
 #include "Lexer/Lexer.h"
 #include "Utilities/Log.h"
+#include "Parser/PrintVisitor.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 
 Driver::Driver()
 {
@@ -16,9 +17,11 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		m_UI->UsageHint(argv[0]);
-		Terminate();
-		return;
+ 		m_UI->UsageHint(argv[0]);
+ 		Terminate();								
+ 		return;
+// 		m_Options.SourceFile = ".\\tests\\parser_true_test1.sig";
+// 		return;
 	}
 
 	bool matches = CheckSourceExtension(argv[1]);
@@ -30,7 +33,7 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 	}
 
 	m_Options.SourceFile = argv[1];
-
+																 // TODO : Fix corner cases error 
 	for (int i = 2; i < argc-1; i++)
 	{
 		if (std::string(argv[i]) == "-o")
@@ -43,13 +46,13 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 
 bool Driver::CheckSourceExtension(const std::string& filePath)
 {
-	size_t dotPos = filePath.find('.');
+	size_t dotPos = filePath.rfind('.');
 	if (dotPos != std::string::npos)
 	{
 		std::string extension = filePath.substr(dotPos + 1);
 		if (extension != "sig")
 		{
-			auto error = ErrorHandler::CreateGeneralError(std::string("Incorrect input file type: .") + extension + "\n message: expected \".sig\"", EErrorInstigator::FileIO);
+			auto error = ErrorHandler::CreateGeneralError(std::string("Incorrect input file type: .") + extension + "\n message: expected file extension \".sig\"", EErrorInstigator::FileIO);
 			m_ErrorHandler->ReportError(error);
 			return false;
 		}
@@ -81,10 +84,11 @@ void Driver::Start()
 		return;
 	}
 
-	m_UI->OutTokens();
-	m_UI->OutIdentifiersTable();
-	m_UI->OutConstantsTable();
-	m_UI->OutKeywordsTable();
+	m_UI->OutLexerResult();
+	AST::PrintVisitor printer;
+	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));	// TODO : Add output to file
+														// TODO : Output more information
+
 }
 
 void Driver::SetUI(std::unique_ptr<CompilerInterface>&& ui)

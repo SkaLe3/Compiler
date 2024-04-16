@@ -1,6 +1,5 @@
-#ifndef DRIVER_H_
-#define DRIVER_H_
- 
+#pragma once
+
 #include "Compiler.h"
 #include "Utilities/CompilerInterface.h"
 
@@ -35,5 +34,3 @@ private:
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
 	std::unique_ptr<CompilerInterface> m_UI;
 };
-
-#endif /* DRIVER_H_ */

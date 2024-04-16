@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 {
 	Log::Init();
 	Driver driver;
-	driver.SetUI(std::make_unique<CLInterface>());
+	driver.SetUI(std::make_unique<CLI>());
 	driver.CreateOptionsFromCLArguments(argc, argv);
 	driver.Start();
 

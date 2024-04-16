@@ -1,7 +1,6 @@
-#ifndef LEXER_H_
-#define LEXER_H_
+#pragma once
 
-#include "Token.h"
+#include "Data/Token.h"
 #include "Errors/Error.h"
 
 #include <cstdint>
@@ -27,7 +26,7 @@ enum class ESymbolCategories : uint8_t
 
 struct LexerData
 {
-	std::vector<Token> Tokens;
+	std::shared_ptr<std::vector<Token>> Tokens;
 	std::unordered_map<std::string, uint32_t> ConstantsTable;
 	std::unordered_map<std::string, uint32_t> IdentifiersTable;
 	std::unordered_map<std::string, uint32_t> KeyWordsTable;
@@ -38,7 +37,7 @@ class ErrorHandler;
 class Lexer 
 {
 public:
-	Lexer(std::shared_ptr<ErrorHandler> errorHandler);
+	Lexer(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_ptr<ErrorHandler> errorHandler);
 
 	void Scan(const std::string& filePath);
 
@@ -60,6 +59,11 @@ private:
 	void InCommentState(size_t line, size_t pos);
 	void EndCommentState(size_t line, size_t pos);
 
+	void ReverseTables();
+
+private:
+	Error CreateSyntaxError(const std::string& errorMessage, uint32_t line, uint32_t pos);
+
 private:
 	std::ifstream m_InputFile;
 	
@@ -72,16 +76,10 @@ private:
 	
 	// Token-related
 	std::string m_TokenBuffer;
-	std::vector<Token> m_Tokens;
+	std::shared_ptr<std::vector<Token>> m_TokenSequence;
 
-	// Tables
-	std::unordered_map<std::string, uint32_t> m_ConstantsTable;
-	std::unordered_map<std::string, uint32_t> m_IdentifiersTable;
-	std::unordered_map<std::string, uint32_t> m_KeyWordsTable;
 
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
 
 	EErrorInstigator m_Instigator;
 };
-
-#endif /* LEXER_H_ */

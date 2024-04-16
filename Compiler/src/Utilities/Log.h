@@ -1,5 +1,4 @@
-#ifndef LOG_H_
-#define LOG_H_
+#pragma once
 
 #include <iostream>
 
@@ -66,16 +65,9 @@ private:
 	char m_Separator;
 };
 
-#ifdef COMPILE_DEBUG
+
 #define LOG_STATE(...) Log::GetLogger()->State(__VA_ARGS__);
 #define LOG_ERROR(...) Log::GetLogger()->Error(__VA_ARGS__);
 #define LOG_TRACE(...) Log::GetLogger()->Trace(__VA_ARGS__);
 
-#else
-#define LOG_STATE
-#define LOG_ERROR
-#define LOG_TRACE
-#endif
 
-
-#endif /* LOG_H_ */

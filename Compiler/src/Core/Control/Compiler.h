@@ -1,11 +1,14 @@
-#ifndef COMPILER_H_
-#define COMPILER_H_
+#pragma once
 
 #include "Lexer/Lexer.h"
+#include "Parser/Parser.h"
 
 #include <string>
+#include <vector>
+#include <memory>
 
 class ErrorHandler;
+struct Token;
 
 class Compiler 
 {
@@ -14,14 +17,17 @@ public:
 	void Compile(const std::string& filePath);
 
 	std::shared_ptr<LexerData> GetLexerData();
+	Ref<ASTNode> GetAST();
 private:
 
 
 
 private:
-	std::unique_ptr<Lexer> m_Lexer; // May be store in shared_ptr and create in driver
+	std::unique_ptr<Lexer> m_Lexer;
+	std::unique_ptr<Parser> m_Parser;
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
 
-};
+	std::shared_ptr<std::vector<Token>>	 m_TokenSequence;
+	Ref<ASTNode> m_AST;
 
-#endif /* COMPILER_H_ */
+};
