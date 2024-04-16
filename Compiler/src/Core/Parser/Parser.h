@@ -60,6 +60,7 @@ private:
 	std::vector<Token>::iterator Previous();
 	std::vector<Token>::iterator Consume(ETokenCode kind, const std::string& message);
 	void Synchronize();
+	void SynchronizeSafe();
 
 private:
 	Error CreateSyntaxError(const std::string& errorMessage, const Token& token);

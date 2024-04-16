@@ -89,7 +89,8 @@ void Lexer::Next()
 	else
 	{
 		m_CurrentSymbol = ESymbolCategories::End;
-		m_TokenSequence->emplace_back(0, 0, +ETokenCode::Eof, "");
+		Token& lastToken = m_TokenSequence->back();
+		m_TokenSequence->emplace_back(lastToken.Line, lastToken.Position, +ETokenCode::Eof, lastToken.Lexeme);
 	}
 }
 

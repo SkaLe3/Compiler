@@ -105,7 +105,7 @@ Ref<ASTNode> Parser::ParseDeclaration(bool& bIsDecl)
 	auto varId = ParseVariableIndetifier();
 	if (!varId)
 	{
-		auto error = CreateSyntaxError("Identifier expected at variable declaration", *Peek());
+		auto error = CreateSyntaxError("Identifier expected at variable declaration or 'BEGIN' is missing", *Peek());
 		m_ErrorHandler->ReportError(error);
 		Synchronize();
 
@@ -173,7 +173,9 @@ Ref<ASTNode> Parser::ParseStatement()
 	if (stmt)
 		return stmt;
 
-	stmt = ParseAssignStatement();		  
+	stmt = ParseAssignStatement();	
+	if (!stmt)
+		Synchronize();
 	return stmt;
 
 }
@@ -182,15 +184,23 @@ Ref<ASTNode> Parser::ParseIfStatement()
 {
 	auto condStmt = ParseConditionStatement();
 	if (!condStmt)
+	{
 		return nullptr;
+	}
 	auto endiff = Consume(ETokenCode::KW_ENDIF, "'ENDIF' expected");
 	ETokenCode endifCode = ETokenCode::Empty;
-	if (endiff != m_TokenSequense->end())
+	if (endiff == m_TokenSequense->end())
+	{
+		return AST::MakeIfStmt(condStmt, ETokenCode::Empty, ETokenCode::Empty);
+	}
 		endifCode = (ETokenCode)endiff->Code;
 	auto semicolon = Consume(ETokenCode::D_Semicolon, "';' expected at the end of the if statement");
 	ETokenCode semicolonCode = ETokenCode::Empty;
-	if (semicolon != m_TokenSequense->end())
-		semicolonCode = (ETokenCode)semicolon->Code;
+	if (semicolon == m_TokenSequense->end())
+	{
+		return AST::MakeIfStmt(condStmt, endifCode, ETokenCode::Empty);
+	}
+	semicolonCode = (ETokenCode)semicolon->Code;
 
 	auto node = AST::MakeIfStmt(condStmt, endifCode, semicolonCode);
 	return node;
@@ -203,14 +213,26 @@ Ref<ASTNode> Parser::ParseAssignStatement()
 		return nullptr;
 	auto assign = Consume(ETokenCode::DelimiterAssign, "':=' expected for assign expression");
 	ETokenCode assignCode = ETokenCode::Empty;
-	if (assign != m_TokenSequense->end())
-		assignCode = (ETokenCode)assign->Code;
+	if (assign == m_TokenSequense->end())
+	{
+		Synchronize();
+		return AST::MakeAssignStmt(varId, ETokenCode::Empty, nullptr, ETokenCode::Empty);
+	}
+	assignCode = (ETokenCode)assign->Code;
 
 	auto expr = ParseExpression();
+	if (!expr)
+	{
+		Synchronize();
+		return	AST::MakeAssignStmt(varId, assignCode, nullptr, ETokenCode::Empty);
+	}
 
 	auto semicolon = Consume(ETokenCode::D_Semicolon, "';' expected at the end of the expression");
 	ETokenCode semicolonCode = ETokenCode::Empty;
-	if (semicolon != m_TokenSequense->end())
+	if (semicolon == m_TokenSequense->end())
+	{
+		return	AST::MakeAssignStmt(varId, assignCode, expr, ETokenCode::Empty);
+	}
 		semicolonCode = (ETokenCode)semicolon->Code;
 
 	auto node = AST::MakeAssignStmt(varId, assignCode, expr, semicolonCode);
@@ -222,7 +244,9 @@ Ref<ASTNode> Parser::ParseConditionStatement()
 {
 	auto condStmt = ParseIncompleteConditionStatement();
 	if (!condStmt)
+	{
 		return nullptr;
+	}
 	auto altPart = ParseAlternativePart();
 	auto node = AST::MakeConditionStmt(condStmt, altPart);
 	return node;
@@ -236,12 +260,16 @@ Ref<ASTNode> Parser::ParseIncompleteConditionStatement()
 	}
 	auto kwif = (ETokenCode)Previous()->Code;
 	auto condExpr = ParseConditionalExpression();
+	if (!condExpr)
+	{
+		Synchronize();
+		return AST::MakeIncompleteConditionStmt(kwif, nullptr, ETokenCode::Empty, nullptr);
+	}
 	auto kwthen = Consume(ETokenCode::KW_THEN, "'THEN' expected");
 	ETokenCode thenCode = ETokenCode::Empty;
 	if (kwthen == m_TokenSequense->end())
 	{
-		Synchronize();
-		return	AST::MakeIncompleteConditionStmt(kwif, condExpr, thenCode, nullptr);
+		return AST::MakeIncompleteConditionStmt(kwif, condExpr, ETokenCode::Empty, nullptr);
 	}
 		thenCode = (ETokenCode)kwthen->Code;
 	auto stmtList = ParseStatementsList();
@@ -270,13 +298,26 @@ Ref<ASTNode> Parser::ParseAlternativePart()
 Ref<ASTNode> Parser::ParseConditionalExpression()
 {
 	auto expr1 = ParseExpression();
+	if (!expr1)
+	{
+		return nullptr;
+	}
 
-	auto equal = Consume(ETokenCode::D_Equal, "'=' expected");
+	auto equal = Consume(ETokenCode::D_Equal, "'=' expected in conditional expression");
 	ETokenCode equalCode = ETokenCode::Empty;
-	if (equal != m_TokenSequense->end())
-		equalCode = (ETokenCode)equal->Code;
+	if (equal == m_TokenSequense->end())
+	{
+		SynchronizeSafe();
+		return nullptr;
+	}
+	equalCode = (ETokenCode)equal->Code;
 
 	auto expr2 = ParseExpression();
+	if (!expr2)
+	{
+		SynchronizeSafe();
+		return nullptr;
+	}
 
 	auto node = AST::MakeConditionalExpr(expr1, equalCode, expr2);
 	return node;
@@ -391,19 +432,7 @@ std::vector<Token>::iterator Parser::Consume(ETokenCode kind, const std::string&
 
 void Parser::Synchronize()
 {
-// 	switch (Peek()->Code)
-// 	{
-// 	case +ETokenCode::KW_PROGRAM:
-// 	case +ETokenCode::KW_VAR:
-// 	case +ETokenCode::KW_BEGIN:
-// 	case +ETokenCode::KW_END:
-// 	case +ETokenCode::KW_IF:
-// 	case +ETokenCode::KW_THEN:
-// 	case +ETokenCode::KW_ELSE:
-// 	case +ETokenCode::KW_ENDIF:
-// 		return;
-// 
-// 	}
+
 	Advance();
 
 	while (!IsAtEnd())
@@ -417,9 +446,28 @@ void Parser::Synchronize()
 		case +ETokenCode::KW_BEGIN:
 		case +ETokenCode::KW_END:
 		case +ETokenCode::KW_IF:
-		case +ETokenCode::KW_THEN:
-		case +ETokenCode::KW_ELSE:
-		case +ETokenCode::KW_ENDIF:
+			return;
+
+		}
+		Advance();
+	}
+}
+
+void Parser::SynchronizeSafe()
+{
+	Advance();
+	while (!IsAtEnd())
+	{
+		if (Previous()->Code == +ETokenCode::D_Semicolon) return;
+
+		switch (Peek()->Code)
+		{
+		case +ETokenCode::KW_PROGRAM:
+		case +ETokenCode::KW_VAR:
+		case +ETokenCode::KW_BEGIN:
+		case +ETokenCode::KW_END:
+		case +ETokenCode::KW_IF:
+		case +ETokenCode::D_Semicolon:
 			return;
 
 		}

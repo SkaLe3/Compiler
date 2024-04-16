@@ -22,7 +22,7 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 		Terminate();								
 		return;
 #else
-		m_Options.SourceFile = ".\\tests\\parser_false_test3.sig";
+		m_Options.SourceFile = ".\\tests\\parser_false_test5.sig";
 		return;
 #endif
 	}

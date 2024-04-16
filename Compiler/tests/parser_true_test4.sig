@@ -1,0 +1,10 @@
+PROGRAM test4;
+VAR var1:INTEGER;
+BEGIN 
+
+	IF var1 = 111 
+	THEN
+	ELSE 
+	ENDIF; 
+
+END. 
