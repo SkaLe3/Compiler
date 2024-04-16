@@ -217,6 +217,7 @@ void Lexer::ConstantState()
 	}
 
 	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+
 	m_TokenBuffer.clear();
 }
 
