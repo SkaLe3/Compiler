@@ -1,9 +1,11 @@
 #include "Lexer.h"
 #include "Errors/ErrorHandler.h"
+#include "Data/SymbolTables.h"
+#include <utility>
 
 
-Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler) 
-	: m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler), m_Instigator(EErrorInstigator::Lexer)
+Lexer::Lexer(std::shared_ptr<std::vector<Token>>& tokenSequence, std::shared_ptr<ErrorHandler> errorHandler)
+	: m_Line(1), m_Position(0), m_CurrentCharacter(0), m_ErrorHandler(errorHandler), m_Instigator(EErrorInstigator::Lexer), m_TokenSequence(tokenSequence)
 {
 	SetupSymbolCategories();
 	SetupKeywordTable();
@@ -13,7 +15,6 @@ Lexer::Lexer(std::shared_ptr<ErrorHandler> errorHandler)
 void Lexer::Scan(const std::string& filePath)
 {
 	m_InputFile.open(filePath);
-
 	if (!m_InputFile.is_open())
 	{
 		auto error = ErrorHandler::CreateGeneralError(std::string("No such file or directory: ") + filePath, EErrorInstigator::FileIO);
@@ -55,11 +56,12 @@ void Lexer::Scan(const std::string& filePath)
 	}
 	m_InputFile.close();
 
+	ReverseTables();
 }
 
 std::shared_ptr<LexerData> Lexer::GetLexerData()
 {
-	return std::make_shared<LexerData>( m_Tokens, m_ConstantsTable, m_IdentifiersTable, m_KeyWordsTable);
+	return std::make_shared<LexerData>( m_TokenSequence, ConstantsTable, IdentifiersTable, KeyWordsTable);
 }
 
 void Lexer::Next()
@@ -85,6 +87,10 @@ void Lexer::Next()
 	else
 	{
 		m_CurrentSymbol = ESymbolCategories::End;
+		Token lastToken = { 1, 1, +ETokenCode::Eof, " " };
+		if (!m_TokenSequence->empty())
+			lastToken  = m_TokenSequence->back();
+		m_TokenSequence->emplace_back(lastToken.Line, lastToken.Position, +ETokenCode::Eof, lastToken.Lexeme);
 	}
 }
 
@@ -115,18 +121,18 @@ void Lexer::SetupSymbolCategories()
 
 void Lexer::SetupKeywordTable()
 {
-	m_KeyWordsTable["PROGRAM"]	= static_cast<uint32_t>(ETokenCode::KW_PROGRAM);
-	m_KeyWordsTable["VAR"]		= static_cast<uint32_t>(ETokenCode::KW_VAR);
-	m_KeyWordsTable["BEGIN"]	= static_cast<uint32_t>(ETokenCode::KW_BEGIN);
-	m_KeyWordsTable["END"]		= static_cast<uint32_t>(ETokenCode::KW_END);
-	m_KeyWordsTable["INTEGER"]	= static_cast<uint32_t>(ETokenCode::KW_INTEGER);
-	m_KeyWordsTable["FLOAT"]	= static_cast<uint32_t>(ETokenCode::KW_FLOAT);
-	m_KeyWordsTable["IF"]		= static_cast<uint32_t>(ETokenCode::KW_IF);
-	m_KeyWordsTable["THEN"]		= static_cast<uint32_t>(ETokenCode::KW_THEN);
-	m_KeyWordsTable["ELSE"]		= static_cast<uint32_t>(ETokenCode::KW_ELSE);
-	m_KeyWordsTable["ENDIF"]	= static_cast<uint32_t>(ETokenCode::KW_ENDIF);
+	KeyWordsTable["PROGRAM"]	= static_cast<uint32_t>(ETokenCode::KW_PROGRAM);
+	KeyWordsTable["VAR"]		= static_cast<uint32_t>(ETokenCode::KW_VAR);
+	KeyWordsTable["BEGIN"]	= static_cast<uint32_t>(ETokenCode::KW_BEGIN);
+	KeyWordsTable["END"]		= static_cast<uint32_t>(ETokenCode::KW_END);
+	KeyWordsTable["INTEGER"]	= static_cast<uint32_t>(ETokenCode::KW_INTEGER);
+	KeyWordsTable["FLOAT"]	= static_cast<uint32_t>(ETokenCode::KW_FLOAT);
+	KeyWordsTable["IF"]		= static_cast<uint32_t>(ETokenCode::KW_IF);
+	KeyWordsTable["THEN"]		= static_cast<uint32_t>(ETokenCode::KW_THEN);
+	KeyWordsTable["ELSE"]		= static_cast<uint32_t>(ETokenCode::KW_ELSE);
+	KeyWordsTable["ENDIF"]	= static_cast<uint32_t>(ETokenCode::KW_ENDIF);
 
-	m_KeyWordsTable[":="] = static_cast<uint32_t>(ETokenCode::DelimiterAssign);
+	KeyWordsTable[":="] = static_cast<uint32_t>(ETokenCode::DelimiterAssign);
 }
 
 void Lexer::WhiteSpaceState()
@@ -151,21 +157,21 @@ void Lexer::IdentifierState()
 
 	uint32_t lexemeCode;
 
-	if (auto kwRecord = m_KeyWordsTable.find(m_TokenBuffer); kwRecord != m_KeyWordsTable.end())
+	if (auto kwRecord = KeyWordsTable.find(m_TokenBuffer); kwRecord != KeyWordsTable.end())
 	{
 		lexemeCode = kwRecord->second;
 	}
-	else if (auto identifierRecord = m_IdentifiersTable.find(m_TokenBuffer); identifierRecord == m_IdentifiersTable.end())
+	else if (auto identifierRecord = IdentifiersTable.find(m_TokenBuffer); identifierRecord == IdentifiersTable.end())
 	{
-		lexemeCode = static_cast<uint32_t>(ETokenCode::IdentifierBase) + m_IdentifiersTable.size();
-		m_IdentifiersTable[m_TokenBuffer] = lexemeCode;
+		lexemeCode = static_cast<uint32_t>(ETokenCode::IdentifierBase) + IdentifiersTable.size();
+		IdentifiersTable[m_TokenBuffer] = lexemeCode;
 	}
 	else
 	{
 		lexemeCode = identifierRecord->second;
 	}
 	
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -179,20 +185,38 @@ void Lexer::ConstantState()
 		m_TokenBuffer += m_CurrentCharacter;
 		Next();
 	}
+	if (m_CurrentSymbol != ESymbolCategories::WhiteSpace
+		&& m_CurrentSymbol != ESymbolCategories::MultiDelimiter
+		&& m_CurrentSymbol != ESymbolCategories::UnaryDelimiter
+		&& m_CurrentSymbol != ESymbolCategories::Comment)
+	{
+		std::string suffixBuffer;
+		while (m_CurrentSymbol != ESymbolCategories::WhiteSpace
+			&& m_CurrentSymbol != ESymbolCategories::MultiDelimiter
+			&& m_CurrentSymbol != ESymbolCategories::UnaryDelimiter
+			&& m_CurrentSymbol != ESymbolCategories::Comment)
+		{
+			suffixBuffer += m_CurrentCharacter;
+			Next();
+		}
+		m_TokenBuffer += suffixBuffer;
+		auto error = ErrorHandler::CreateSyntaxError("Invalid suffix \"" + suffixBuffer + "\" on integer constant \"" + m_TokenBuffer + "\"", lexemeLine, lexemeStartPosition, m_Instigator);
+		m_ErrorHandler->ReportError(error);
+	}
+
 	uint32_t lexemeCode;
 
-	if (auto tableRecord = m_ConstantsTable.find(m_TokenBuffer); tableRecord == m_ConstantsTable.end())
+	if (auto tableRecord = ConstantsTable.find(m_TokenBuffer); tableRecord == ConstantsTable.end())
 	{
-		lexemeCode = static_cast<uint32_t>(ETokenCode::ConstantBase) + m_ConstantsTable.size(); 
-		m_ConstantsTable[m_TokenBuffer] = lexemeCode;
+		lexemeCode = static_cast<uint32_t>(ETokenCode::ConstantBase) + ConstantsTable.size(); 
+		ConstantsTable[m_TokenBuffer] = lexemeCode;
 	}
 	else
 	{
 		lexemeCode = tableRecord->second;
 	}
 
-
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -203,9 +227,9 @@ void Lexer::UnaryDelimiterState()
 
 	m_TokenBuffer += m_CurrentCharacter;
 
-	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
+	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentCharacter);
 	Next();
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -215,19 +239,20 @@ void Lexer::MultiDelimiterState()
 	size_t lexemeStartPosition = m_Position;
 
 	m_TokenBuffer += m_CurrentCharacter;
-	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentSymbol);
+	uint32_t lexemeCode = static_cast<uint32_t>(m_CurrentCharacter);
 	Next();
 	
 	if (m_CurrentCharacter == '=')
 	{
 		m_TokenBuffer += m_CurrentCharacter;
-		if (auto tableRecord = m_KeyWordsTable.find(m_TokenBuffer); tableRecord != m_KeyWordsTable.end())
+		if (auto tableRecord = KeyWordsTable.find(m_TokenBuffer); tableRecord != KeyWordsTable.end())
 		{
 			lexemeCode = tableRecord->second;
 		}
+		Next();
 	}
 
-	m_Tokens.emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
+	m_TokenSequence->emplace_back(lexemeLine, lexemeStartPosition, lexemeCode, m_TokenBuffer);
 	m_TokenBuffer.clear();
 }
 
@@ -250,7 +275,6 @@ void Lexer::CommentState()
 
 void Lexer::InCommentState(size_t line, size_t pos)
 {
-
 	Next();
 	while (m_CurrentCharacter != '*' && m_CurrentCharacter != EOF)
 	{
@@ -266,7 +290,6 @@ void Lexer::InCommentState(size_t line, size_t pos)
 		auto error = ErrorHandler::CreateSyntaxError("Comment not closed", line, pos, m_Instigator);
 		m_ErrorHandler->ReportError(error);
 	}
-
 }
 
 void Lexer::EndCommentState(size_t line, size_t pos)
@@ -283,6 +306,23 @@ void Lexer::EndCommentState(size_t line, size_t pos)
 	}
 
 	InCommentState(line, pos);
-	
+}
+
+void Lexer::ReverseTables()
+{
+	for (const auto& pair : KeyWordsTable) {
+		Reverse_KeyWordsTable[pair.second] = pair.first;
+	}
+	for (const auto& pair : ConstantsTable) {
+		Reverse_ConstantsTable[pair.second] = pair.first;
+	}
+	for (const auto& pair : IdentifiersTable) {
+		Reverse_IdentifiersTable[pair.second] = pair.first;
+	}
+}
+
+Error Lexer::CreateSyntaxError(const std::string& errorMessage, uint32_t line, uint32_t pos)
+{
+	return ErrorHandler::CreateSyntaxError(errorMessage, line, pos, m_Instigator);
 }
 

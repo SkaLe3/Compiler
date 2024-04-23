@@ -1,0 +1,4 @@
+PROGRAM tt2_no_VAR;
+BEGIN 
+
+END. 

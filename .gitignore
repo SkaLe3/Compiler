@@ -62,8 +62,11 @@ build/
 *.svclog
 *.scc
 
+
 # Custom
 vendor/
+*.vcxproj
+*.vcxproj.filters
 *.bat
 *.lua
 *.sln
