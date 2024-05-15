@@ -18,7 +18,7 @@ public:
 	virtual void OutConstantsTable() = 0;
 	virtual void OutKeywordsTable() = 0;
 
-	virtual void OutAST(const std::string& ast) = 0;
+	virtual void OutAST(const std::string& ast) = 0;   // TODO : write to file
 
 	virtual void OutOptions() = 0;
 

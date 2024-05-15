@@ -13,6 +13,9 @@ struct Options
 {
 	std::string SourceFile;
 	std::string OutputFile;
+	bool ListingOnly = false;
+	bool Verbose = false;
+	// TODO : add verbose
 };
 
 class Driver final
@@ -26,6 +29,7 @@ public:
 
 private:
 	bool CheckSourceExtension(const std::string& filePath);
+	bool CorrectOutExtension(std::string& filePath, const std::string& expected);
 	void Terminate();
 
 private:

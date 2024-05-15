@@ -11,6 +11,7 @@ BEGIN
 		THEN
 		ELSE
 		ENDIF;
+		var2 := 7;
 	ENDIF; 
 
 	IF 222 = 222
