@@ -22,7 +22,7 @@ public:
 	void Assemble(const std::string& filePath);
 	void Link(const std::string& filePath);
 private:
-
+	bool ExecuteCommand(const std::string& command);
 
 
 private:

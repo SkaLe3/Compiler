@@ -6,6 +6,7 @@
 enum class EErrorInstigator : uint8_t
 {
 	FileIO,
+	Compiler,
 	Lexer,
 	Parser,
 	CodeGenerator
@@ -14,7 +15,9 @@ enum class EErrorInstigator : uint8_t
 enum class EErrorType : uint8_t
 {
 	SyntaxError,
+	SemanticError,
 	DriverError,
+	BuildError,
 	None
 };
 
