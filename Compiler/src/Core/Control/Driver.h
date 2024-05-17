@@ -32,6 +32,8 @@ private:
 	bool CorrectOutExtension(std::string& filePath, const std::string& expected);
 	void Terminate();
 
+	void Assemble();
+
 private:
 	Options m_Options;
 	std::unique_ptr<Compiler> m_Compiler;

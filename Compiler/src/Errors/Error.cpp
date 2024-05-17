@@ -42,6 +42,8 @@ std::string Error::InstigatorToString(EErrorInstigator instigator)
 	{
 	case EErrorInstigator::FileIO:
 		return "File IO";
+	case EErrorInstigator::Compiler:
+		return "Compiler";
 	case EErrorInstigator::Lexer:
 		return "Lexer";
 	case EErrorInstigator::Parser:
@@ -59,8 +61,12 @@ std::string Error::TypeToString(EErrorType type)
 	{
 	case EErrorType::SyntaxError:
 		return "syntax error";
+	case EErrorType::SemanticError:
+		return "semantic error";
 	case EErrorType::DriverError:
 		return "driver error";
+	case EErrorType::BuildError:
+		return "build error";
 	default:
 		return "unknown error";
 	}

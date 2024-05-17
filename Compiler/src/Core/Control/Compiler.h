@@ -19,6 +19,8 @@ public:
 
 	std::shared_ptr<LexerData> GetLexerData();
 	Ref<ASTNode> GetAST();
+	void Assemble(const std::string& filePath);
+	void Link(const std::string& filePath);
 private:
 
 

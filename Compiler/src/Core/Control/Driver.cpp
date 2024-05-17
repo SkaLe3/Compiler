@@ -63,12 +63,12 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 	{
 		if (m_Options.ListingOnly)
 		{
-			if (!CorrectOutExtension(m_Options.OutputFile, ".asm"))
+			if (!CorrectOutExtension(m_Options.OutputFile, ".s"))
 			{
 				m_UI->OutErrors();
 				Terminate();
 				return;
-			}	
+			}
 		}
 		else
 		{
@@ -116,6 +116,18 @@ void Driver::Terminate()
 	exit(EXIT_FAILURE);
 }
 
+void Driver::Assemble()
+{
+	if (m_Options.ListingOnly)
+		return;
+
+	std::filesystem::path filePath(m_Options.OutputFile);
+	m_Compiler->Assemble(filePath.replace_extension(".asm").string());
+	m_Compiler->Link(filePath.replace_extension(".obj").string());
+
+
+}
+
 void Driver::Start()
 {
 	LOG_STATE("Build started...", "\n");
@@ -124,6 +136,7 @@ void Driver::Start()
 	m_UI->SetOutToFileEnabled(true);
 
 	m_Compiler->Compile(m_Options.SourceFile, m_Options.OutputFile);
+	Assemble();
 
 	m_UI->SetLexerData(m_Compiler->GetLexerData());
 	m_UI->OutErrors();
