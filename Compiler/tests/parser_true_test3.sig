@@ -1,5 +1,0 @@
-PROGRAM tt3_empty_VAR;
-VAR
-BEGIN 
-
-END. 
