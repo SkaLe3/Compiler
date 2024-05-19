@@ -50,5 +50,8 @@ namespace AST
 		virtual void Visit(NProcedureIdentifier& node) = 0;
 		virtual void Visit(NIdentifier& node) = 0;
 		virtual void Visit(NConstant& node) = 0;
+
+	protected:
+		bool IsValid(ASTNode* node) { return node != nullptr; }
 	};
 }

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Visitor.h"
+#include "Data/Visitor.h"
 #include "Data/Token.h"
 #include "Data/ASTNode.h"
 
 #include <sstream>
 #include <string>
 
-#define SafeAccept(expr) do { if (IsValid(expr.get())) { (expr)->Accept(*this); } else { PrintNullptr(); } } while (false)
+#define SafeAcceptPrint(expr) do { if (IsValid(expr.get())) { (expr)->Accept(*this); } else { PrintNullptr(); } } while (false)
 
 namespace AST
 {
@@ -49,7 +49,6 @@ namespace AST
 		void StartNode(const std::string& str);
 		void EndNode();
 
-		bool IsValid(ASTNode* node) { return node != nullptr; }
 		void PrintNullptr();
 		std::string KeywordToString(ETokenCode key);
 		std::string ConstantToString(uint32_t key);
@@ -59,5 +58,6 @@ namespace AST
 		std::stringstream m_SS;
 		std::string m_Delim = "-";
 		std::string m_Offset;
+
 	};
 }

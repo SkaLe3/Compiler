@@ -1,5 +1,5 @@
 #include "Nodes.h"
-#include "Parser/Visitor.h"
+#include "Data/Visitor.h"
 
 using namespace AST;
 

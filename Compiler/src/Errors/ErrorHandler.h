@@ -19,6 +19,7 @@ public:
 	static Error CreateSyntaxError(const std::string& errorMessage, uint32_t line, uint32_t pos, EErrorInstigator instigator);
 	static Error CreateSyntaxError(const std::string& errorMessage, const Token& token, EErrorInstigator instigator);
 	static Error CreateGeneralError(const std::string& errorMessage, EErrorInstigator instigator);
+	static Error CreateBuildError(const std::string& errorMessage, EErrorInstigator instigator);
 
 	void GotFatalError();
 	bool HasFatalError();
