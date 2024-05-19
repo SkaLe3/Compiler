@@ -36,6 +36,11 @@ Error ErrorHandler::CreateSyntaxError(const std::string& errorMessage, const Tok
 	}
 }
 
+Error ErrorHandler::CreateSemanticError(const std::string& errorMessage, const Token& token, EErrorInstigator instigator)
+{
+	return CreateError(errorMessage, token, instigator, EErrorType::SemanticError);
+}
+
 Error ErrorHandler::CreateGeneralError(const std::string& errorMessage, EErrorInstigator instigator)
 {
 	return CreateError(errorMessage, 0, 0, instigator, EErrorType::DriverError);
