@@ -1,5 +1,6 @@
 #include "Compiler.h"
 #include "Errors/ErrorHandler.h"
+#include "Utilities/Log.h"
 
 #include <windows.h>
 
@@ -13,10 +14,19 @@ Compiler::Compiler(std::shared_ptr<ErrorHandler> errorHandler) : m_ErrorHandler(
 
 void Compiler::Compile(const std::string& inputfilePath, const std::string& outputfilePath)
 {
+	if (m_ErrorHandler->HasFatalError())
+		return;
 	m_Lexer->Scan(inputfilePath);
+
+	if (m_ErrorHandler->HasFatalError())
+		return;
 	m_Parser->Parse();
+
 	m_AST = m_Parser->GetAST();
 	Generator::SetInOut(m_AST, outputfilePath);
+
+	if (m_ErrorHandler->HasFatalError())
+		return;
 	m_Generator->Generate();
 }
 
@@ -40,7 +50,7 @@ bool Compiler::Assemble(const std::string& filePath)
 		m_ErrorHandler->ReportError(error);
 		m_ErrorHandler->GotFatalError();
 		return false;
-	}	
+	}
 	return true;
 }
 

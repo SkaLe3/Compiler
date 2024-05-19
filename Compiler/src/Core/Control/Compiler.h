@@ -24,7 +24,6 @@ public:
 private:
 	bool ExecuteCommand(const std::string& command, std::string& output);
 
-
 private:
 	std::unique_ptr<Lexer> m_Lexer;
 	std::unique_ptr<Parser> m_Parser;

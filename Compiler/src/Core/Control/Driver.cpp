@@ -22,10 +22,10 @@ bool Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 		m_UI->UsageHint();
 		Terminate();
 		return false;
-		// 		m_Options.SourceFile = ".\\tests\\codegen_true_test.sig";
-		// 		m_Options.ListingOnly = true;
-		// 		m_Options.Verbose = true;
-		// 		m_Options.OutputFile = "prog";
+// 		 		m_Options.SourceFile = "codegen_true_test.sig";
+// 		 		m_Options.ListingOnly = false;
+// 		 		m_Options.Verbose = true;
+// 		 		m_Options.OutputFile = "";
 	}
 	else
 	{
