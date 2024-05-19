@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <string>
+#include <unordered_set>
 
 #define SafeAccept(expr) do { if (IsValid(expr.get())) { (expr)->Accept(*this); } } while (false)
 
@@ -47,9 +48,10 @@ private:
 	void EmitCommandRegToVar(const std::string& command, const std::string& variable);
 	void EmitCommandConst(const std::string& command, const std::string& value);
 	void EmitJump(const std::string& jump, uint32_t label);
-	Error CreateSemanticError(const std::string& errorMessage, uint32_t line, uint32_t pos);
+	Error CreateSemanticError(const std::string& errorMessage, const Token& token);
 
 	void GenExprMov(Ref<ASTNode> node);
+	void CheckIfDeclared(const std::string& ident, const Token& token);
 
 private:
 	static Ref<ASTNode> m_AST;
@@ -65,5 +67,7 @@ private:	// States
 	std::string m_ProcedureIdentifier;
 	std::string m_Reg = "eax";
 	uint32_t m_LabelCounter = 0;
+
+	std::unordered_set<std::string> m_Variables;
 
 };

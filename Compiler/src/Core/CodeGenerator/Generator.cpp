@@ -41,7 +41,7 @@ void Generator::Visit(NSignalProgram& node)
 {
 	Emit(".386");
 	Emit(".model flat, C");
-	
+
 	if (node.Program == nullptr)
 	{
 		Emit(".code");
@@ -50,7 +50,7 @@ void Generator::Visit(NSignalProgram& node)
 		return;
 	}
 	SafeAccept(node.Program);
-	
+
 }
 
 void Generator::Visit(NProgram& node)
@@ -87,6 +87,7 @@ void Generator::Visit(NDeclaration& node)
 {
 	SafeAccept(node.VarIdentifier);
 	EmitVarDecl(m_LastIdentifier);
+	m_Variables.insert(m_LastIdentifier);
 }
 
 void Generator::Visit(NAttribute& node)
@@ -199,7 +200,7 @@ void Generator::EmitLabel(const std::string& label)
 {
 	Emit(label + ":");
 }
-void Generator::EmitLabel( uint32_t label)
+void Generator::EmitLabel(uint32_t label)
 {
 	Emit("?L" + std::to_string(label) + ":");
 }
@@ -238,16 +239,32 @@ void Generator::EmitJump(const std::string& jump, uint32_t label)
 	Emit(line);
 }
 
-Error Generator::CreateSemanticError(const std::string& errorMessage, uint32_t line, uint32_t pos)
+Error Generator::CreateSemanticError(const std::string& errorMessage, const Token& token)
 {
-	return ErrorHandler::CreateSyntaxError(errorMessage, line, pos, m_Instigator);
+	return ErrorHandler::CreateSemanticError(errorMessage, token, m_Instigator);
 }
 
 void Generator::GenExprMov(Ref<ASTNode> node)
 {
-	if (dynamic_pointer_cast<NVariableIdentifier>(node))
+	if (Ref<NVariableIdentifier> variable =  dynamic_pointer_cast<NVariableIdentifier>(node); variable)
+	{
+		CheckIfDeclared(m_LastIdentifier, static_pointer_cast<NIdentifier>(variable->Identifier)->token);
 		EmitCommandVarToReg("mov", m_LastIdentifier);
+	}
 	else
+	{
 		EmitCommandConst("mov", m_LastConstant);
+	}
+}
+
+void Generator::CheckIfDeclared(const std::string& ident, const Token& token)
+{
+	auto it = m_Variables.find(ident);
+	if (it == m_Variables.end())
+	{
+		auto error = CreateSemanticError("'" + ident + "': undeclared identifier", token);
+		m_ErrorHandler->ReportError(error);
+		m_ErrorHandler->GotFatalError();
+	}
 }
 

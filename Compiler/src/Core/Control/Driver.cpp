@@ -169,7 +169,9 @@ void Driver::Start()
 		outPath.replace_extension(".asm");
 
 	m_Compiler->Compile(m_Options.SourceFile, outPath.string());
-	bool success = Assemble();
+	bool success = !m_ErrorHandler->HasFatalError();
+	if (success)
+		success &= Assemble();
 
 	m_UI->SetLexerData(m_Compiler->GetLexerData());
 	m_UI->OutErrors();
