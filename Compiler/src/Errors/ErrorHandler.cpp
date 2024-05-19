@@ -40,6 +40,10 @@ Error ErrorHandler::CreateGeneralError(const std::string& errorMessage, EErrorIn
 {
 	return CreateError(errorMessage, 0, 0, instigator, EErrorType::DriverError);
 }
+Error ErrorHandler::CreateBuildError(const std::string& errorMessage, EErrorInstigator instigator)
+{
+	return CreateError(errorMessage, 0, 0, instigator, EErrorType::BuildError);
+}
 
 void ErrorHandler::GotFatalError()
 {

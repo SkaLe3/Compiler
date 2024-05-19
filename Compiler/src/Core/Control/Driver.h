@@ -13,6 +13,8 @@ struct Options
 {
 	std::string SourceFile;
 	std::string OutputFile;
+	bool ListingOnly = false;
+	bool Verbose = false;
 };
 
 class Driver final
@@ -20,13 +22,16 @@ class Driver final
 public:
 	Driver();
 
-	void CreateOptionsFromCLArguments(int argc, char* argv[]);
+	bool CreateOptionsFromCLArguments(int argc, char* argv[]);
 	void Start();
 	void SetUI(std::unique_ptr<CompilerInterface>&& ui);
 
 private:
 	bool CheckSourceExtension(const std::string& filePath);
+	bool CorrectOutExtension(std::string& filePath, const std::string& expected);
 	void Terminate();
+
+	bool Assemble();
 
 private:
 	Options m_Options;

@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <cstdint>
 
 extern std::unordered_map<std::string, uint32_t> ConstantsTable;
 extern std::unordered_map<std::string, uint32_t> IdentifiersTable;

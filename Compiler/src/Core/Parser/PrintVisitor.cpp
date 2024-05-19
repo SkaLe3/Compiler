@@ -8,7 +8,9 @@ std::string AST::PrintVisitor::Print(Ref<ASTNode> ast)
 {
 	Ref<NSignalProgram> program = static_pointer_cast<NSignalProgram>(ast);
 	if (program)
-		SafeAccept(program);
+	{
+		SafeAcceptPrint(program);
+	}
 	else
 	{
 		m_SS << "Empty translation unit!";
@@ -20,7 +22,7 @@ void AST::PrintVisitor::Visit(NSignalProgram& node)
 {
 	m_SS << "|<signal-program>\n";
 
-	SafeAccept(node.Program);
+	SafeAcceptPrint(node.Program);
 
 }
 
@@ -29,9 +31,9 @@ void AST::PrintVisitor::Visit(NProgram& node)
 	StartNode("<program>");
 	
 	PrintAttribute(KeywordToString(node.Program));
-	SafeAccept(node.ProcIdentifier);	   
+	SafeAcceptPrint(node.ProcIdentifier);	   
 	PrintAttribute(DelimToString(node.Semicolon));
-	SafeAccept(node.Block);
+	SafeAcceptPrint(node.Block);
 	PrintAttribute(DelimToString(node.Dot));
 
 	EndNode();
@@ -41,9 +43,9 @@ void AST::PrintVisitor::Visit(NBlock& node)
 {
 	StartNode("<block>");
 
-	SafeAccept(node.VarDecl);
+	SafeAcceptPrint(node.VarDecl);
 	PrintAttribute(KeywordToString(node.Begin));
-	SafeAccept(node.StmtsList);
+	SafeAcceptPrint(node.StmtsList);
 	PrintAttribute(KeywordToString(node.End));
 
 	EndNode();
@@ -61,7 +63,7 @@ void AST::PrintVisitor::Visit(NVariableDeclarations& node)
 	}
 
 	PrintAttribute(KeywordToString(node.Var));
-	SafeAccept(node.DeclList);
+	SafeAcceptPrint(node.DeclList);
 
 	EndNode();
 }
@@ -76,8 +78,8 @@ void AST::PrintVisitor::Visit(NDeclarationsList& node)
 		EndNode();
 		return;
 	}
-	SafeAccept(node.Decl);
-	SafeAccept(node.DeclList);
+	SafeAcceptPrint(node.Decl);
+	SafeAcceptPrint(node.DeclList);
 
 	EndNode();
 }
@@ -86,9 +88,9 @@ void AST::PrintVisitor::Visit(NDeclaration& node)
 {
 	StartNode("<declaration>");
 
-	SafeAccept(node.VarIdentifier);
+	SafeAcceptPrint(node.VarIdentifier);
 	PrintAttribute(DelimToString(node.Colon));
-	SafeAccept(node.Attribute);
+	SafeAcceptPrint(node.Attribute);
 	PrintAttribute(DelimToString(node.Semicolon));
 
 	EndNode();
@@ -114,8 +116,8 @@ void AST::PrintVisitor::Visit(NStmtsList& node)
 		return;
 	}
 
-	SafeAccept(node.Stmt);
-	SafeAccept(node.StmtsList);
+	SafeAcceptPrint(node.Stmt);
+	SafeAcceptPrint(node.StmtsList);
 	EndNode();
 }
 
@@ -134,7 +136,7 @@ void AST::PrintVisitor::Visit(NIfStmt& node)
 {
 	StartNode("<if-statement>");
 
-	SafeAccept(node.CondStmt);
+	SafeAcceptPrint(node.CondStmt);
 	PrintAttribute(KeywordToString(node.Endif));
 	PrintAttribute(DelimToString(node.Semicolon));
 
@@ -145,9 +147,9 @@ void AST::PrintVisitor::Visit(NAssignStmt& node)
 {
 	StartNode("<assign-statement>");
 
-	SafeAccept(node.VarIdentifier);
+	SafeAcceptPrint(node.VarIdentifier);
 	PrintAttribute(KeywordToString(node.Op));
-	SafeAccept(node.Expr);
+	SafeAcceptPrint(node.Expr);
 	PrintAttribute(DelimToString(node.Semicolon));
 
 	EndNode();
@@ -157,8 +159,8 @@ void AST::PrintVisitor::Visit(NConditionStmt& node)
 {
 	StartNode("<condition-statement>");
 
-	SafeAccept(node.IncompleteCondStmt);
-	SafeAccept(node.AltPart);
+	SafeAcceptPrint(node.IncompleteCondStmt);
+	SafeAcceptPrint(node.AltPart);
 
 	EndNode();
 }
@@ -168,9 +170,9 @@ void AST::PrintVisitor::Visit(NIncompleteConditionStmt& node)
 	StartNode("<incomplete-condition-statement>");
 
 	PrintAttribute(KeywordToString(node.If));
-	SafeAccept(node.CondExpr);
+	SafeAcceptPrint(node.CondExpr);
 	PrintAttribute(KeywordToString(node.Then));
-	SafeAccept(node.StmtsList);
+	SafeAcceptPrint(node.StmtsList);
 
 	EndNode();
 }
@@ -187,7 +189,7 @@ void AST::PrintVisitor::Visit(NAlternativePart& node)
 	}
 
 	PrintAttribute(KeywordToString(node.Else));
-	SafeAccept(node.StmtsList);
+	SafeAcceptPrint(node.StmtsList);
 
 	EndNode();
 }
@@ -196,9 +198,9 @@ void AST::PrintVisitor::Visit(NConditionalExpr& node)
 {
 	StartNode("<conditional-expression>");
 
-	SafeAccept(node.Expr1);
+	SafeAcceptPrint(node.Expr1);
 	PrintAttribute(DelimToString(node.Op));
-	SafeAccept(node.Expr2);
+	SafeAcceptPrint(node.Expr2);
 
 	EndNode();
 }
@@ -215,7 +217,7 @@ void AST::PrintVisitor::Visit(NVariableIdentifier& node)
 {
 	StartNode("<variable-identifier>");
 
-	SafeAccept(node.Identifier);
+	SafeAcceptPrint(node.Identifier);
 
 	EndNode();
 }
@@ -224,7 +226,7 @@ void AST::PrintVisitor::Visit(NProcedureIdentifier& node)
 {
 	StartNode("<procedure-identifier>");
 	
-	SafeAccept(node.Identifier);
+	SafeAcceptPrint(node.Identifier);
 
 	EndNode();
 }
