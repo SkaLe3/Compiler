@@ -227,21 +227,25 @@ struct NProcedureIdentifier : public ASTNode
 
 struct NIdentifier : public ASTNode
 {
-	NIdentifier(uint32_t id) : Identifier(id) {}
+	NIdentifier(uint32_t id, const Token& tok) : token(tok), Identifier(id) {}
 
 	uint32_t Identifier;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
 	virtual void Accept(AST::Visitor& visitor) override;
+
+	Token token;
 };
 struct NConstant : public NExpr
 {
-	NConstant(uint32_t value) : Val(value) {}
+	NConstant(uint32_t value, const Token& tok) : token(tok), Val(value) {}
 
 	uint32_t Val;
 
 	virtual std::vector<Ref<ASTNode>> GetData() override;
 	virtual std::string ToString() override;
 	virtual void Accept(AST::Visitor& visitor) override;
+
+	Token token;
 };

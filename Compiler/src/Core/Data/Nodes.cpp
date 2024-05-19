@@ -339,13 +339,13 @@ namespace AST
 	{
 		return std::make_shared<NProcedureIdentifier>(id);
 	}
-	Ref<ASTNode> MakeIdentifier(uint32_t id)
+	Ref<ASTNode> MakeIdentifier(uint32_t id, const Token& tok)
 	{
-		return std::make_shared<NIdentifier>(id);
+		return std::make_shared<NIdentifier>(id, tok);
 	}
-	Ref<ASTNode> MakeConstant(uint32_t value)
+	Ref<ASTNode> MakeConstant(uint32_t value, const Token& tok)
 	{
-		return std::make_shared<NConstant>(value);
+		return std::make_shared<NConstant>(value, tok);
 	}
 
 }

@@ -287,7 +287,7 @@ Ref<ASTNode> Parser::ParseIdentifier()
 		return nullptr;
 
 	auto identifier = Previous()->Code;
-	return AST::MakeIdentifier(identifier);
+	return AST::MakeIdentifier(identifier, *Peek());
 }
 
 Ref<ASTNode> Parser::ParseConstant()
@@ -299,7 +299,7 @@ Ref<ASTNode> Parser::ParseConstant()
 		return nullptr;
 	}
 	auto constant = Previous()->Code;
-	return AST::MakeConstant(constant);
+	return AST::MakeConstant(constant, *Peek());
 }
 
 Ref<ASTNode> Parser::GetAST()
