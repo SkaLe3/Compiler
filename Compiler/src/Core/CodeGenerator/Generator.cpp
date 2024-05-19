@@ -1,9 +1,7 @@
 #include "Generator.h"
 #include "Errors/ErrorHandler.h" 
 #include "Data/Nodes.h"
-
-
-
+#include "Data/SymbolTables.h"
 
 
 Ref<ASTNode> Generator::m_AST;
@@ -41,34 +39,54 @@ void Generator::Generate()
 
 void Generator::Visit(NSignalProgram& node)
 {
+	Emit(".386");
+	Emit(".model flat, C");
+	
+	if (node.Program == nullptr)
+	{
+		Emit(".code");
+		Emit("empty:");
+		Emit("end empty");
+		return;
+	}
 	SafeAccept(node.Program);
+	
 }
 
 void Generator::Visit(NProgram& node)
 {
-	Emit(".386");
-	Emit(".model flat, C");
-
+	SafeAccept(node.ProcIdentifier);
+	SafeAccept(node.Block);
 }
 
 void Generator::Visit(NBlock& node)
 {
-
+	Emit(".data");
+	SafeAccept(node.VarDecl);
+	Emit(".code");
+	Emit("main proc");
+	Emit("\tjmp " + m_ProcedureIdentifier);
+	EmitLabel(m_ProcedureIdentifier);
+	SafeAccept(node.StmtsList);
+	Emit("main endp");
+	Emit("end main");
 }
 
 void Generator::Visit(NVariableDeclarations& node)
 {
-
+	SafeAccept(node.DeclList);
 }
 
 void Generator::Visit(NDeclarationsList& node)
 {
-
+	SafeAccept(node.Decl);
+	SafeAccept(node.DeclList);
 }
 
 void Generator::Visit(NDeclaration& node)
 {
-
+	SafeAccept(node.VarIdentifier);
+	EmitVarDecl(m_LastIdentifier);
 }
 
 void Generator::Visit(NAttribute& node)
@@ -83,37 +101,60 @@ void Generator::Visit(NStmt& node)
 
 void Generator::Visit(NStmtsList& node)
 {
-
+	SafeAccept(node.Stmt);
+	SafeAccept(node.StmtsList);
 }
 
 void Generator::Visit(NIfStmt& node)
 {
-
+	SafeAccept(node.CondStmt);
 }
 
 void Generator::Visit(NAssignStmt& node)
 {
+	m_Reg = "eax";
+	SafeAccept(node.Expr);
+	GenExprMov(node.Expr);
+
+	SafeAccept(node.VarIdentifier);
+	EmitCommandRegToVar("mov", m_LastIdentifier);
 
 }
 
 void Generator::Visit(NConditionStmt& node)
 {
+	uint32_t label = m_LabelCounter;
 
+	SafeAccept(node.IncompleteCondStmt);
+	EmitLabel(label);
+
+	SafeAccept(node.AltPart);
+	EmitLabel(++label);
 }
 
 void Generator::Visit(NIncompleteConditionStmt& node)
 {
+	SafeAccept(node.CondExpr);
+	EmitJump("jne", m_LabelCounter++);
 
+	SafeAccept(node.StmtsList);
+	EmitJump("jmp", m_LabelCounter++);
 }
 
 void Generator::Visit(NAlternativePart& node)
 {
-
+	SafeAccept(node.StmtsList);
 }
 
 void Generator::Visit(NConditionalExpr& node)
 {
-
+	m_Reg = "eax";
+	SafeAccept(node.Expr1);
+	GenExprMov(node.Expr1);
+	m_Reg = "ebx";
+	SafeAccept(node.Expr2);
+	GenExprMov(node.Expr2);
+	EmitCommand("cmp", "eax", "ebx");
 }
 
 void Generator::Visit(NExpr& node)
@@ -123,25 +164,90 @@ void Generator::Visit(NExpr& node)
 
 void Generator::Visit(NVariableIdentifier& node)
 {
-
+	SafeAccept(node.Identifier);
 }
 
 void Generator::Visit(NProcedureIdentifier& node)
 {
-
+	SafeAccept(node.Identifier);
+	m_ProcedureIdentifier = m_LastIdentifier;
 }
 
 void Generator::Visit(NIdentifier& node)
 {
-
+	m_LastIdentifier = Reverse_IdentifiersTable[node.Identifier];
 }
 
 void Generator::Visit(NConstant& node)
 {
-
+	m_LastConstant = Reverse_ConstantsTable[node.Val];
 }
 
 void Generator::Emit(const std::string& str)
 {
 	m_Outputfile << str << "\n";
 }
+
+void Generator::EmitVarDecl(const std::string& ident)
+{
+	std::string line;
+	line += "\t" + ident + " DWORD ?";
+	Emit(line);
+}
+
+void Generator::EmitLabel(const std::string& label)
+{
+	Emit(label + ":");
+}
+void Generator::EmitLabel( uint32_t label)
+{
+	Emit("?L" + std::to_string(label) + ":");
+}
+
+void Generator::EmitCommand(const std::string& command, const std::string& reg1, const std::string& reg2)
+{
+	Emit("\t" + command + " " + reg1 + ", " + reg2);
+}
+
+void Generator::EmitCommandVarToReg(const std::string& command, const std::string& variable)
+{
+	std::string line;
+	line = "\t" + command + " " + m_Reg + ", " + "DWORD PTR [" + variable + "]";
+	Emit(line);
+}
+
+void Generator::EmitCommandRegToVar(const std::string& command, const std::string& variable)
+{
+	std::string line;
+	line = "\t" + command + " " + "DWORD PTR [" + variable + "]" + ", " + m_Reg;
+	Emit(line);
+}
+
+
+void Generator::EmitCommandConst(const std::string& command, const std::string& value)
+{
+	std::string line;
+	line = "\t" + command + " " + m_Reg + ", " + value;
+	Emit(line);
+}
+
+void Generator::EmitJump(const std::string& jump, uint32_t label)
+{
+	std::string line;
+	line = "\t" + jump + " ?L" + std::to_string(label);
+	Emit(line);
+}
+
+Error Generator::CreateSemanticError(const std::string& errorMessage, uint32_t line, uint32_t pos)
+{
+	return ErrorHandler::CreateSyntaxError(errorMessage, line, pos, m_Instigator);
+}
+
+void Generator::GenExprMov(Ref<ASTNode> node)
+{
+	if (dynamic_pointer_cast<NVariableIdentifier>(node))
+		EmitCommandVarToReg("mov", m_LastIdentifier);
+	else
+		EmitCommandConst("mov", m_LastConstant);
+}
+

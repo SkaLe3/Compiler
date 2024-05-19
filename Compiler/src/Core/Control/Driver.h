@@ -15,7 +15,6 @@ struct Options
 	std::string OutputFile;
 	bool ListingOnly = false;
 	bool Verbose = false;
-	// TODO : add verbose
 };
 
 class Driver final
@@ -23,7 +22,7 @@ class Driver final
 public:
 	Driver();
 
-	void CreateOptionsFromCLArguments(int argc, char* argv[]);
+	bool CreateOptionsFromCLArguments(int argc, char* argv[]);
 	void Start();
 	void SetUI(std::unique_ptr<CompilerInterface>&& ui);
 
@@ -32,7 +31,7 @@ private:
 	bool CorrectOutExtension(std::string& filePath, const std::string& expected);
 	void Terminate();
 
-	void Assemble();
+	bool Assemble();
 
 private:
 	Options m_Options;

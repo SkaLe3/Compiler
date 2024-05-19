@@ -18,11 +18,11 @@ public:
 	virtual void OutConstantsTable() = 0;
 	virtual void OutKeywordsTable() = 0;
 
-	virtual void OutAST(const std::string& ast) = 0;   // TODO : write to file
+	virtual void OutAST(const std::string& ast) = 0;
 
-	virtual void OutOptions() = 0;
+	virtual void OutOptions(const std::string& source, const std::string& out) = 0;
 
-	virtual void UsageHint(char* name) = 0;
+	virtual void UsageHint() = 0;
 
 	void SetErrorHandler(std::shared_ptr<ErrorHandler> errorHandler);
 	void SetLexerData(std::shared_ptr<LexerData> lexerData);
@@ -51,12 +51,12 @@ public:
 
 	virtual void OutAST(const std::string& ast) override;
 
-	virtual void OutOptions() override;
+	virtual void OutOptions(const std::string& source, const std::string& out) override;
 
-	virtual void UsageHint(char* name) override;
+	virtual void UsageHint() override;
 
 private:
-
 	void DisplayTable(const std::unordered_map<std::string, uint32_t>& table, const std::string& tableHeader);
+	void RemoveColors(std::string& str);
 
 };

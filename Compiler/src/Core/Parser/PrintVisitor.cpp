@@ -8,7 +8,9 @@ std::string AST::PrintVisitor::Print(Ref<ASTNode> ast)
 {
 	Ref<NSignalProgram> program = static_pointer_cast<NSignalProgram>(ast);
 	if (program)
+	{
 		SafeAcceptPrint(program);
+	}
 	else
 	{
 		m_SS << "Empty translation unit!";

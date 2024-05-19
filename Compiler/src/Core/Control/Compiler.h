@@ -19,10 +19,10 @@ public:
 
 	std::shared_ptr<LexerData> GetLexerData();
 	Ref<ASTNode> GetAST();
-	void Assemble(const std::string& filePath);
-	void Link(const std::string& filePath);
+	bool Assemble(const std::string& filePath);
+	bool Link(const std::string& filePath);
 private:
-	bool ExecuteCommand(const std::string& command);
+	bool ExecuteCommand(const std::string& command, std::string& output);
 
 
 private:

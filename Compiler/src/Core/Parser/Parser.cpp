@@ -15,7 +15,7 @@ void Parser::Parse()
 Ref<ASTNode> Parser::ParseTranslationUnit()
 {
 	if (IsAtEnd())
-		return nullptr;
+		return AST::MakeSignalProgram(nullptr);
 	Ref<ASTNode> program = ParseProgram();
 	return AST::MakeSignalProgram(program);
 }

@@ -58,5 +58,6 @@ namespace AST
 		std::stringstream m_SS;
 		std::string m_Delim = "-";
 		std::string m_Offset;
+
 	};
 }

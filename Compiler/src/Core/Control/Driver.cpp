@@ -4,6 +4,7 @@
 #include "Lexer/Lexer.h"
 #include "Utilities/Log.h"
 #include "Parser/PrintVisitor.h"
+#include "Utilities/Timer.h"
 
 #include <cstdlib>
 #include <filesystem>
@@ -14,45 +15,71 @@ Driver::Driver()
 	m_Compiler = std::make_unique<Compiler>(m_ErrorHandler);
 }
 
-void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
+bool Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		m_UI->UsageHint(argv[0]);
+		m_UI->UsageHint();
 		Terminate();
-		return;
-		// 		m_Options.SourceFile = ".\\tests\\parser_true_test1.sig";
-		// 		return;
+		return false;
+		// 		m_Options.SourceFile = ".\\tests\\codegen_true_test.sig";
+		// 		m_Options.ListingOnly = true;
+		// 		m_Options.Verbose = true;
+		// 		m_Options.OutputFile = "prog";
 	}
-
-	bool matches = CheckSourceExtension(argv[1]);
-	if (!matches)
+	else
 	{
-		m_UI->OutErrors();
-		Terminate();
-		return;
+		bool matches = CheckSourceExtension(argv[1]);
+		if (!matches)
+		{
+			m_UI->OutErrors();
+			Terminate();
+			return false;
+		}
+		bool gotSource = false;
+		for (int i = 1; i < argc; i++)
+		{
+			if (std::string(argv[i])[0] != '-')
+			{
+				if (gotSource)
+					continue;
+				m_Options.SourceFile = argv[i];
+				gotSource = true;
+			}
+			else if (std::string(argv[i]) == "-o")
+			{
+				if (i != argc - 1)
+					m_Options.OutputFile = argv[++i];
+			}
+			else if (std::string(argv[i]) == "-S")
+			{
+				m_Options.ListingOnly = true;
+			}
+			else if (std::string(argv[i]) == "-v")
+			{
+				m_Options.Verbose = true;
+			}
+			else if (std::string(argv[i]) == "-h" || std::string(argv[i]) == "-help")
+			{
+				m_UI->UsageHint();
+				return false;
+			}
+		}
 	}
-
-	m_Options.SourceFile = argv[1];
-	// TODO : Fix corner cases error 
-	for (int i = 2; i < argc - 1; i++)
+	if (m_Options.OutputFile.empty())
 	{
-		if (std::string(argv[i]) == "-o")
-		{
-			m_Options.OutputFile = argv[i + 1];
-		}
-		else if (std::string(argv[i]) == "-S")
-		{
-			m_Options.ListingOnly = true;
-		}
+		std::filesystem::path sourcePath(m_Options.SourceFile);
+		if (m_Options.ListingOnly)
+			m_Options.OutputFile = sourcePath.filename().replace_extension(".s").string();
+		else
+			m_Options.OutputFile = sourcePath.filename().replace_extension(".exe").string();
 	}
-
 	std::filesystem::path filePath(m_Options.OutputFile);
 	if (filePath.extension().empty())
 	{
 		if (m_Options.ListingOnly)
 		{
-			m_Options.OutputFile += ".asm";
+			m_Options.OutputFile += ".s";
 		}
 		else
 		{
@@ -67,19 +94,21 @@ void Driver::CreateOptionsFromCLArguments(int argc, char* argv[])
 			{
 				m_UI->OutErrors();
 				Terminate();
-				return;
+				return false;
 			}
 		}
 		else
 		{
-			if (!CorrectOutExtension(m_Options.OutputFile, ".exe"));
+
+			if (!CorrectOutExtension(m_Options.OutputFile, ".exe"))
 			{
 				m_UI->OutErrors();
 				Terminate();
-				return;
+				return false;
 			}
 		}
 	}
+	return true;
 }
 
 bool Driver::CheckSourceExtension(const std::string& filePath)
@@ -116,27 +145,31 @@ void Driver::Terminate()
 	exit(EXIT_FAILURE);
 }
 
-void Driver::Assemble()
+bool Driver::Assemble()
 {
 	if (m_Options.ListingOnly)
-		return;
-
+		return true;
 	std::filesystem::path filePath(m_Options.OutputFile);
-	m_Compiler->Assemble(filePath.replace_extension(".asm").string());
-	m_Compiler->Link(filePath.replace_extension(".obj").string());
+	bool success = m_Compiler->Assemble(filePath.replace_extension(".asm").string());
+	success &= m_Compiler->Link(filePath.replace_extension(".obj").string());
 
-
+	return success;
 }
 
 void Driver::Start()
 {
 	LOG_STATE("Build started...", "\n");
+	Timer timer;
 
 	m_UI->SetInfoFileName("comp_info.txt");
 	m_UI->SetOutToFileEnabled(true);
 
-	m_Compiler->Compile(m_Options.SourceFile, m_Options.OutputFile);
-	Assemble();
+	std::filesystem::path outPath(m_Options.OutputFile);
+	if (!m_Options.ListingOnly)
+		outPath.replace_extension(".asm");
+
+	m_Compiler->Compile(m_Options.SourceFile, outPath.string());
+	bool success = Assemble();
 
 	m_UI->SetLexerData(m_Compiler->GetLexerData());
 	m_UI->OutErrors();
@@ -146,10 +179,19 @@ void Driver::Start()
 		Terminate();
 		return;
 	}
+	if (m_Options.Verbose)
+	{
+		m_UI->OutOptions(m_Options.SourceFile, m_Options.OutputFile);
+		m_UI->OutLexerResult();
+		AST::PrintVisitor printer;
+		m_UI->OutAST(printer.Print(m_Compiler->GetAST()));
+	}
 
-	m_UI->OutLexerResult();
-	AST::PrintVisitor printer;
-	m_UI->OutAST(printer.Print(m_Compiler->GetAST()));
+	if (success)
+	{
+		LOG_STATE("========== Build: 1 succeeded ==========");
+		LOG_STATE("========== Elapsed", timer.ElapsedFormat(), "==========");
+	}
 
 }
 

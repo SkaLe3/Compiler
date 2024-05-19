@@ -39,6 +39,17 @@ public:
 
 private:
 	void Emit(const std::string& str);
+	void EmitVarDecl(const std::string& ident);
+	void EmitLabel(const std::string& label);
+	void EmitLabel(uint32_t label);
+	void EmitCommand(const std::string& command, const std::string& reg1, const std::string& reg2);
+	void EmitCommandVarToReg(const std::string& command, const std::string& variable);
+	void EmitCommandRegToVar(const std::string& command, const std::string& variable);
+	void EmitCommandConst(const std::string& command, const std::string& value);
+	void EmitJump(const std::string& jump, uint32_t label);
+	Error CreateSemanticError(const std::string& errorMessage, uint32_t line, uint32_t pos);
+
+	void GenExprMov(Ref<ASTNode> node);
 
 private:
 	static Ref<ASTNode> m_AST;
@@ -47,4 +58,12 @@ private:
 
 	std::shared_ptr<ErrorHandler> m_ErrorHandler;
 	EErrorInstigator m_Instigator;
+
+private:	// States
+	std::string	m_LastIdentifier;
+	std::string m_LastConstant;
+	std::string m_ProcedureIdentifier;
+	std::string m_Reg = "eax";
+	uint32_t m_LabelCounter = 0;
+
 };

@@ -16,6 +16,12 @@ std::string GetInstigatorColor(EErrorInstigator inst)
 		return TEAL;
 	case EErrorInstigator::Parser:
 		return MAGENTA;
+	case EErrorInstigator::CodeGenerator:
+		return 	AZURE;
+	case EErrorInstigator::FileIO:
+		return LEMON;
+	case EErrorInstigator::Compiler:
+		return LIME;
 	default:
 		return RESET;
 
@@ -180,19 +186,32 @@ void CLI::OutAST(const std::string& ast)
 	std::cout << AZURE;
 	std::cout << "=====================================\n\n";
 	std::cout << RESET;
+
+	std::string ast_uncolored = ast;
+	RemoveColors(ast_uncolored);
+	m_Ofs << "============ Syntax Tree ============\n\n";
+	m_Ofs << ast_uncolored << "\n";
+	m_Ofs << "=====================================\n\n";
+
 }
 
-void CLI::OutOptions()
+void CLI::OutOptions(const std::string& source, const std::string& out)
 {
-	// TODO : Use OutOptions
-	std::cout << "Source file: \n";
-	std::cout << "Out file: \n";
+	std::cout << "Source file: " << source << "\n";
+	std::cout << "Out file: " << out <<"\n";
+
+	m_Ofs << "Source file: " << source << "\n";
+	m_Ofs << "Out file: " << out << "\n";
 }
 
-void CLI::UsageHint(char* name)
+void CLI::UsageHint()
 {
-	std::cout << "Usage: " << "./ssc" << " <source_file> [options...] <out_file>\n";
-	// TODO : Add options list
+	std::cout << "\nUsage: .\\ssc [options] <source_file> [options]\n";
+	std::cout << "Options:\n";
+	std::cout << "  -o <file>       Place the output into <file>\n";
+	std::cout << "  -S              Compile only; do not assemble or link\n";
+	std::cout << "  -v              Verbose mode; show detailed compiler operations\n";
+	std::cout << "  -h, --help      Display this information\n\n";
 }
 
 void CLI::DisplayTable(const std::unordered_map<std::string, uint32_t>& table, const std::string& tableHeader)
@@ -230,4 +249,23 @@ void CLI::DisplayTable(const std::unordered_map<std::string, uint32_t>& table, c
 	}
 
 	m_Ofs << "=====================================\n\n";
+}
+
+
+void CLI::RemoveColors(std::string& str)
+{
+	size_t startPos = 0;
+
+	while ((startPos = str.find("", startPos)) != std::string::npos)
+	{
+		size_t endPos = str.find('m', startPos);
+		if (endPos != std::string::npos)
+		{
+			str.erase(startPos, endPos - startPos + 1);
+		}
+		else
+		{
+			break;
+		}
+	}
 }
