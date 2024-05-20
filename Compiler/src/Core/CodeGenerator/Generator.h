@@ -7,6 +7,7 @@
 #include <unordered_set>
 
 #define SafeAccept(expr) do { if (IsValid(expr.get())) { (expr)->Accept(*this); } } while (false)
+#define VISIT(type) virtual void Visit(type node)
 
 class ErrorHandler;
 
@@ -17,26 +18,27 @@ public:
 	static void SetInOut(Ref<ASTNode> ast, const std::string& filePath);
 	void Generate();
 
-	virtual void Visit(NSignalProgram& node);
-	virtual void Visit(NProgram& node);
-	virtual void Visit(NBlock& node);
-	virtual void Visit(NVariableDeclarations& node);
-	virtual void Visit(NDeclarationsList& node);
-	virtual void Visit(NDeclaration& node);
-	virtual void Visit(NAttribute& node);
-	virtual void Visit(NStmt& node);
-	virtual void Visit(NStmtsList& node);
-	virtual void Visit(NIfStmt& node);
-	virtual void Visit(NAssignStmt& node);
-	virtual void Visit(NConditionStmt& node);
-	virtual void Visit(NIncompleteConditionStmt& node);
-	virtual void Visit(NAlternativePart& node);
-	virtual void Visit(NConditionalExpr& node);
-	virtual void Visit(NExpr& node);
-	virtual void Visit(NVariableIdentifier& node);
-	virtual void Visit(NProcedureIdentifier& node);
-	virtual void Visit(NIdentifier& node);
-	virtual void Visit(NConstant& node);
+	VISIT(NSignalProgram&);
+	VISIT(NProgram&);
+	VISIT(NBlock&);
+	VISIT(NVariableDeclarations&);
+	VISIT(NDeclarationsList&);
+	VISIT(NDeclaration&);
+	VISIT(NAttribute&);
+	VISIT(NStmt&);
+	VISIT(NStmtsList&);
+	VISIT(NIfStmt&);
+	VISIT(NAssignStmt&);
+	VISIT(NConditionStmt&);
+	VISIT(NIncompleteConditionStmt&);
+	VISIT(NAlternativePart&);
+	VISIT(NConditionalExpr&);
+	VISIT(NExpr&);
+	VISIT(NVariableIdentifier&);
+	VISIT(NProcedureIdentifier&);
+	VISIT(NIdentifier&);
+	VISIT(NConstant&);
+
 
 private:
 	void Emit(const std::string& str);
